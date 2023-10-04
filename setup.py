@@ -74,7 +74,7 @@ setup(
     description=DESC,
     long_description=LONG_DESC,
     long_description_content_type="text/x-rst",
-    license = "Apache Software License 2.0",
+    license="Apache Software License 2.0",
     python_requires=">=3.8",
     classifiers=[
         "Environment :: Console",

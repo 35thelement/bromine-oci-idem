@@ -28,11 +28,13 @@ copyright = f"{copyright_year}, "
 author = ""
 
 # Strip version info from ../../idem_oci_instance/version.py
-with open(Path(Path(__file__).parent.parent, 'idem_oci_instance', 'version.py')) as version_file:
+with open(
+    Path(Path(__file__).parent.parent, "idem_oci_instance", "version.py")
+) as version_file:
     content = version_file.readlines()
     for file_line in content:
-        if 'version =' in file_line:
-            version = file_line.split(' ')[2].replace('"','')
+        if "version =" in file_line:
+            version = file_line.split(" ")[2].replace('"', "")
             break
 
 # Variables to pass into the docs from sitevars.rst for rst substitution
@@ -173,7 +175,7 @@ autosummary_generate_overwrite = False
 # Generates HTML page at <html-root>/py-modindex.html
 # Default is [].
 # We only care about ['idem_oci_instance.states.oci', 'idem_oci_instance.exec.oci'] module directories
-modindex_common_prefix = ['idem_oci_instance.states.oci', 'idem_oci_instance.exec.oci']
+modindex_common_prefix = ["idem_oci_instance.states.oci", "idem_oci_instance.exec.oci"]
 
 # Sphinx autoapi settings
 # autoapi_dirs = ['../idem_posix']

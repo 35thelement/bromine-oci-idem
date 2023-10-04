@@ -1,16 +1,14 @@
 """Add test related fixtures here e.g. a fixture that will pre-create a resource needed for the tests."""
-
-
 import asyncio
 import pathlib
-from typing import Dict, Any, List
+from typing import Any
+from typing import Dict
+from typing import List
 
 import dict_tools
-import pytest_asyncio
-
 import pop
-
 import pytest
+import pytest_asyncio
 
 
 @pytest.fixture(scope="session")

@@ -1,25 +1,17 @@
-
 """States module for managing Blockstorages. """
-
 from typing import Any
 from typing import Dict
-from typing import List
-from collections import OrderedDict
-from dataclasses import field
-from dataclasses import make_dataclass
+
 import dict_tools.differ as differ
 
-__contracts__ = ['resource']
-
-
+__contracts__ = ["resource"]
 
 
 async def present(
     hub,
-    ctx
-,
+    ctx,
 ) -> Dict[str, Any]:
-    '''
+    """
 
     Returns:
         Dict[str, Any]
@@ -32,12 +24,11 @@ async def present(
               oci.oci.blockstorage.present: []
 
 
-    '''
-
+    """
 
     result = dict(
-            comment=[], old_state={}, new_state={}, name=name, result=True, rerun_data=None
-        )
+        comment=[], old_state={}, new_state={}, name=name, result=True, rerun_data=None
+    )
 
     desired_state = {
         k: v
@@ -68,17 +59,13 @@ async def present(
         if bool(changes.get("new")):
             if ctx.test:
                 result["new_state"] = hub.tool.oci.test_state_utils.generate_test_state(
-                    enforced_state={},
-                    desired_state=desired_state
+                    enforced_state={}, desired_state=desired_state
                 )
                 result["comment"].append(f"Would update oci.blockstorage: {name}")
                 return result
             else:
                 # Update the resource
-                update_ret = await hub.exec.oci.blockstorage.update(
-                    ctx,
-                    **{}
-                )
+                update_ret = await hub.exec.oci.blockstorage.update(ctx, **{})
                 result["result"] = update_ret["result"]
 
                 if result["result"]:
@@ -88,16 +75,12 @@ async def present(
     else:
         if ctx.test:
             result["new_state"] = hub.tool.oci.test_state_utils.generate_test_state(
-                enforced_state={},
-                desired_state=desired_state
+                enforced_state={}, desired_state=desired_state
             )
             result["comment"] = (f"Would create oci.blockstorage: {name}",)
             return result
         else:
-            create_ret = await hub.exec.oci.blockstorage.create(
-                ctx,
-                **{}
-            )
+            create_ret = await hub.exec.oci.blockstorage.create(ctx, **{})
             result["result"] = create_ret["result"]
 
             if result["result"]:
@@ -124,14 +107,12 @@ async def present(
     return result
 
 
-
 async def absent(
     hub,
-    ctx
-,
-)  -> Dict[str, Any]:
-    '''
-    
+    ctx,
+) -> Dict[str, Any]:
+    """
+
 
     Returns:
         Dict[str, Any]
@@ -144,12 +125,11 @@ async def absent(
               oci.oci.blockstorage.absent: []
 
 
-    '''
-
+    """
 
     result = dict(
-            comment=[], old_state={}, new_state={}, name=name, result=True, rerun_data=None
-        )
+        comment=[], old_state={}, new_state={}, name=name, result=True, rerun_data=None
+    )
 
     if not resource_id:
         resource_id = (ctx.old_state or {}).get("resource_id")
@@ -192,12 +172,11 @@ async def absent(
     return result
 
 
-
 async def describe(hub, ctx) -> Dict[str, Dict[str, Any]]:
-    '''
+    """
     Describe the resource in a way that can be recreated/managed with the corresponding "present" function
 
-    
+
 
     Returns:
         Dict[str, Any]
@@ -207,15 +186,12 @@ async def describe(hub, ctx) -> Dict[str, Dict[str, Any]]:
         .. code-block:: bash
 
             $ idem describe oci.blockstorage
-    '''
-
+    """
 
     result = {}
 
     # TODO: Add other required parameters from: {}
-    ret = await hub.exec.oci.blockstorage.list(
-        ctx
-    )
+    ret = await hub.exec.oci.blockstorage.list(ctx)
 
     if not ret or not ret["result"]:
         hub.log.debug(f"Could not describe oci.blockstorage {ret['comment']}")
@@ -231,5 +207,3 @@ async def describe(hub, ctx) -> Dict[str, Dict[str, Any]]:
             ]
         }
     return result
-
-

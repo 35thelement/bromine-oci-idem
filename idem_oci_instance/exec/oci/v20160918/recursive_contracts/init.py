@@ -9,7 +9,8 @@ def pre(hub, ctx: ContractedContext):
     if "endpoint_url" not in func_ctx.acct:
         func_ctx.acct.endpoint_url = hub.exec.oci.DEFAULT_ENDPOINT_URL
 
-async def _ret(status:bool, ret=None, comment:str = ""):
+
+async def _ret(status: bool, ret=None, comment: str = ""):
     """
     Force the return to be a properly formatted coroutine
     """

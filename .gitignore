@@ -160,3 +160,6 @@ Thumbs.db
 
 # pop-create logs
 pop-create.log
+
+# credentials
+credentials.*

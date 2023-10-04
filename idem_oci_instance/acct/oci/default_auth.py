@@ -5,18 +5,6 @@ DEFAULT_ENDPOINT_URL = "/20160918"
 
 
 async def gather(hub, profiles) -> Dict[str, Any]:
-    """
-    Generate token with basic auth
-
-    Example:
-    .. code-block:: yaml
-
-        oci:
-          profile_name:
-            username: my_user
-            password: my_token
-            endpoint_url: https://oci.com
-    """
     sub_profiles = {}
     for (
         profile,

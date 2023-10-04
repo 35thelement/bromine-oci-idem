@@ -4,12 +4,12 @@ noxfile
 Nox configuration script
 """
 # pylint: disable=resource-leakage,3rd-party-module-not-gated
-from pathlib import Path
 import datetime
 import os
 import pathlib
 import shutil
 import sys
+from pathlib import Path
 
 # fmt: off
 if __name__ == "__main__":
@@ -189,7 +189,7 @@ def docs_html(session, clean):
     """
     Build Sphinx HTML Documentation
     """
-    pydir = _get_pydir(session)
+    _get_pydir(session)
 
     # Latest pip, setuptools, and wheel
     install_command = ["--progress-bar=off", "-U", "pip", "setuptools", "wheel"]
@@ -205,7 +205,7 @@ def docs_html(session, clean):
     if clean:
         sphinxopts += "E"
         base_modules_dir = "idem_oci_instance"
-        autogen_config = ['exec/', 'states/']
+        autogen_config = ["exec/", "states/"]
         skip_dir_config = ["contracts"]
         gen_docs_dir_parent = "docs/ref"
         args = ["--separate", "--tocfile", "index", "-f", "-o"]

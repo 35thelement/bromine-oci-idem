@@ -1,17 +1,10 @@
-
 """Utility functions for Computes. """
-
-from typing import Any
-from typing import Dict
-from typing import List
 from collections import OrderedDict
 from dataclasses import field
 from dataclasses import make_dataclass
-import dict_tools.differ as differ
-
-
-
-
+from typing import Any
+from typing import Dict
+from typing import List
 
 
 async def list_app_catalog_listings(
@@ -22,50 +15,49 @@ async def list_app_catalog_listings(
     sort_order: str = None,
     publisher_name: str = None,
     publisher_type: str = None,
-    display_name: str = None
+    display_name: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListAppCatalogListings
-        Lists the published listings.
 
-    Args:
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+        ListAppCatalogListings
+            Lists the published listings.
 
-Example: `50`
-. Defaults to None.
+        Args:
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-        publisher_name(str, Optional):
-            A filter to return only the publisher that matches the given publisher name exactly.
-. Defaults to None.
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
 
-        publisher_type(str, Optional):
-            A filter to return only publishers that match the given publisher type exactly. Valid types are OCI, ORACLE, TRUSTED, STANDARD.
-. Defaults to None.
+            publisher_name(str, Optional):
+                A filter to return only the publisher that matches the given publisher name exactly.
+    . Defaults to None.
 
-        display_name(str, Optional):
-            A filter to return only resources that match the given display name exactly.
-. Defaults to None.
+            publisher_type(str, Optional):
+                A filter to return only publishers that match the given publisher type exactly. Valid types are OCI, ORACLE, TRUSTED, STANDARD.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            display_name(str, Optional):
+                A filter to return only resources that match the given display name exactly.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -75,10 +67,15 @@ is case sensitive.
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/appCatalogListings".format(
-            **{}
-        ),
-        query_params={"limit": limit, "page": page, "sortOrder": sort_order, "publisherName": publisher_name, "publisherType": publisher_type, "displayName": display_name},
+        path="/appCatalogListings".format(**{}),
+        query_params={
+            "limit": limit,
+            "page": page,
+            "sortOrder": sort_order,
+            "publisherName": publisher_name,
+            "publisherType": publisher_type,
+            "displayName": display_name,
+        },
         data=payload,
         headers={},
     )
@@ -88,20 +85,14 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
 
-async def get_app_catalog_listing(
-    hub,
-    ctx,
-    listing_id: str
-) -> Dict[str, Any]:
+async def get_app_catalog_listing(hub, ctx, listing_id: str) -> Dict[str, Any]:
     r"""
-    
+
     GetAppCatalogListing
         Gets the specified listing.
 
@@ -114,7 +105,6 @@ async def get_app_catalog_listing(
 
     """
 
-
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
@@ -123,9 +113,7 @@ async def get_app_catalog_listing(
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/appCatalogListings/{listingId}".format(
-            **{"listingId": listing_id}
-        ),
+        path="/appCatalogListings/{listingId}".format(**{"listingId": listing_id}),
         query_params={},
         data=payload,
         headers={},
@@ -136,28 +124,30 @@ async def get_app_catalog_listing(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'contact_url': 'contactUrl',
-             'description': 'description',
-             'display_name': 'displayName',
-             'listing_id': 'listingId',
-             'publisher_logo_url': 'publisherLogoUrl',
-             'publisher_name': 'publisherName',
-             'summary': 'summary',
-             'time_published': 'timePublished'}
+        {
+            "contact_url": "contactUrl",
+            "description": "description",
+            "display_name": "displayName",
+            "listing_id": "listingId",
+            "publisher_logo_url": "publisherLogoUrl",
+            "publisher_name": "publisherName",
+            "summary": "summary",
+            "time_published": "timePublished",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -168,41 +158,40 @@ async def list_app_catalog_listing_resource_versions(
     listing_id: str,
     limit: int = None,
     page: str = None,
-    sort_order: str = None
+    sort_order: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListAppCatalogListingResourceVersions
-        Gets all resource versions for a particular listing.
 
-    Args:
-        listing_id(str):
-            The OCID of the listing.
+        ListAppCatalogListingResourceVersions
+            Gets all resource versions for a particular listing.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+        Args:
+            listing_id(str):
+                The OCID of the listing.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -225,21 +214,16 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
 
 async def get_app_catalog_listing_resource_version(
-    hub,
-    ctx,
-    listing_id: str,
-    resource_version: str
+    hub, ctx, listing_id: str, resource_version: str
 ) -> Dict[str, Any]:
     r"""
-    
+
     GetAppCatalogListingResourceVersion
         Gets the specified listing resource version.
 
@@ -254,7 +238,6 @@ async def get_app_catalog_listing_resource_version(
         Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -277,40 +260,39 @@ async def get_app_catalog_listing_resource_version(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'accessible_ports': 'accessiblePorts',
-             'allowed_actions': 'allowedActions',
-             'available_regions': 'availableRegions',
-             'compatible_shapes': 'compatibleShapes',
-             'listing_id': 'listingId',
-             'listing_resource_id': 'listingResourceId',
-             'listing_resource_version': 'listingResourceVersion',
-             'time_published': 'timePublished'}
+        {
+            "accessible_ports": "accessiblePorts",
+            "allowed_actions": "allowedActions",
+            "available_regions": "availableRegions",
+            "compatible_shapes": "compatibleShapes",
+            "listing_id": "listingId",
+            "listing_resource_id": "listingResourceId",
+            "listing_resource_version": "listingResourceVersion",
+            "time_published": "timePublished",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def get_app_catalog_listing_agreements(
-    hub,
-    ctx,
-    listing_id: str,
-    resource_version: str
+    hub, ctx, listing_id: str, resource_version: str
 ) -> Dict[str, Any]:
     r"""
-    
+
     GetAppCatalogListingAgreements
         Retrieves the agreements for a particular resource version of a listing.
 
@@ -325,7 +307,6 @@ async def get_app_catalog_listing_agreements(
         Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -348,26 +329,28 @@ async def get_app_catalog_listing_agreements(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'eula_link': 'eulaLink',
-             'listing_id': 'listingId',
-             'listing_resource_version': 'listingResourceVersion',
-             'oracle_terms_of_use_link': 'oracleTermsOfUseLink',
-             'signature': 'signature',
-             'time_retrieved': 'timeRetrieved'}
+        {
+            "eula_link": "eulaLink",
+            "listing_id": "listingId",
+            "listing_resource_version": "listingResourceVersion",
+            "oracle_terms_of_use_link": "oracleTermsOfUseLink",
+            "signature": "signature",
+            "time_retrieved": "timeRetrieved",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -380,56 +363,55 @@ async def list_app_catalog_subscriptions(
     page: str = None,
     sort_by: str = None,
     sort_order: str = None,
-    listing_id: str = None
+    listing_id: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListAppCatalogSubscriptions
-        Lists subscriptions for a compartment.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        ListAppCatalogSubscriptions
+            Lists subscriptions for a compartment.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-        listing_id(str, Optional):
-            A filter to return only the listings that matches the given listing id.
-. Defaults to None.
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            listing_id(str, Optional):
+                A filter to return only the listings that matches the given listing id.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -439,10 +421,15 @@ is case sensitive.
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/appCatalogSubscriptions".format(
-            **{}
-        ),
-        query_params={"compartmentId": compartment_id, "limit": limit, "page": page, "sortBy": sort_by, "sortOrder": sort_order, "listingId": listing_id},
+        path="/appCatalogSubscriptions".format(**{}),
+        query_params={
+            "compartmentId": compartment_id,
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+            "listingId": listing_id,
+        },
         data=payload,
         headers={},
     )
@@ -452,9 +439,7 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -469,62 +454,67 @@ async def create_app_catalog_subscription(
     signature: str,
     time_retrieved: str,
     opc_retry_token: str = None,
-    eula_link: str = None
+    eula_link: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    CreateAppCatalogSubscription
-        Create a subscription for listing resource version for a compartment. It will take some time to propagate to all regions.
 
-    Args:
-        compartment_id(str):
-            The compartmentID for the subscription.
+        CreateAppCatalogSubscription
+            Create a subscription for listing resource version for a compartment. It will take some time to propagate to all regions.
 
-        listing_id(str):
-            The OCID of the listing.
+        Args:
+            compartment_id(str):
+                The compartmentID for the subscription.
 
-        listing_resource_version(str):
-            Listing resource version.
+            listing_id(str):
+                The OCID of the listing.
 
-        oracle_terms_of_use_link(str):
-            Oracle TOU link.
+            listing_resource_version(str):
+                Listing resource version.
 
-        signature(str):
-            A generated signature for this listing resource version retrieved the agreements API.
+            oracle_terms_of_use_link(str):
+                Oracle TOU link.
 
-        time_retrieved(str):
-            Date and time the agreements were retrieved, in [RFC3339](https://tools.ietf.org/html/rfc3339) format.
-Example: `2018-03-20T12:32:53.532Z`
-.
+            signature(str):
+                A generated signature for this listing resource version retrieved the agreements API.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            time_retrieved(str):
+                Date and time the agreements were retrieved, in [RFC3339](https://tools.ietf.org/html/rfc3339) format.
+    Example: `2018-03-20T12:32:53.532Z`
+    .
 
-        eula_link(str, Optional):
-            EULA link. Defaults to None.
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            eula_link(str, Optional):
+                EULA link. Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'compartment_id': 'compartmentId', 'eula_link': 'eulaLink', 'listing_id': 'listingId', 'listing_resource_version': 'listingResourceVersion', 'oracle_terms_of_use_link': 'oracleTermsOfUseLink', 'signature': 'signature', 'time_retrieved': 'timeRetrieved'}
+    payload = {
+        "compartment_id": "compartmentId",
+        "eula_link": "eulaLink",
+        "listing_id": "listingId",
+        "listing_resource_version": "listingResourceVersion",
+        "oracle_terms_of_use_link": "oracleTermsOfUseLink",
+        "signature": "signature",
+        "time_retrieved": "timeRetrieved",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/appCatalogSubscriptions".format(
-            **{}
-        ),
+        path="/appCatalogSubscriptions".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-retry-token": opc_retry_token},
@@ -535,41 +525,39 @@ may be rejected).
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'compartment_id': 'compartmentId',
-             'display_name': 'displayName',
-             'listing_id': 'listingId',
-             'listing_resource_id': 'listingResourceId',
-             'listing_resource_version': 'listingResourceVersion',
-             'publisher_name': 'publisherName',
-             'summary': 'summary',
-             'time_created': 'timeCreated'}
+        {
+            "compartment_id": "compartmentId",
+            "display_name": "displayName",
+            "listing_id": "listingId",
+            "listing_resource_id": "listingResourceId",
+            "listing_resource_version": "listingResourceVersion",
+            "publisher_name": "publisherName",
+            "summary": "summary",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def delete_app_catalog_subscription(
-    hub,
-    ctx,
-    listing_id: str,
-    compartment_id: str,
-    resource_version: str
+    hub, ctx, listing_id: str, compartment_id: str, resource_version: str
 ) -> Dict[str, Any]:
     r"""
-    
+
     DeleteAppCatalogSubscription
         Delete a subscription for a listing resource version for a compartment.
 
@@ -588,7 +576,6 @@ async def delete_app_catalog_subscription(
 
     """
 
-
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
@@ -597,10 +584,12 @@ async def delete_app_catalog_subscription(
     ret = await hub.tool.oci.session.request(
         ctx,
         method="delete",
-        path="/appCatalogSubscriptions".format(
-            **{}
-        ),
-        query_params={"listingId": listing_id, "compartmentId": compartment_id, "resourceVersion": resource_version},
+        path="/appCatalogSubscriptions".format(**{}),
+        query_params={
+            "listingId": listing_id,
+            "compartmentId": compartment_id,
+            "resourceVersion": resource_version,
+        },
         data=payload,
         headers={},
     )
@@ -610,9 +599,7 @@ async def delete_app_catalog_subscription(
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -625,49 +612,48 @@ async def list_boot_volume_attachments(
     limit: int = None,
     page: str = None,
     instance_id: str = None,
-    boot_volume_id: str = None
+    boot_volume_id: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListBootVolumeAttachments
-        Lists the boot volume attachments in the specified compartment. You can filter the
-    list by specifying an instance OCID, boot volume OCID, or both.
 
-    Args:
-        availability_domain(str):
-            The name of the availability domain.
+        ListBootVolumeAttachments
+            Lists the boot volume attachments in the specified compartment. You can filter the
+        list by specifying an instance OCID, boot volume OCID, or both.
 
-Example: `Uocm:PHX-AD-1`
-.
+        Args:
+            availability_domain(str):
+                The name of the availability domain.
 
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+    Example: `Uocm:PHX-AD-1`
+    .
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        instance_id(str, Optional):
-            The OCID of the instance. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-        boot_volume_id(str, Optional):
-            The OCID of the boot volume. Defaults to None.
+            instance_id(str, Optional):
+                The OCID of the instance. Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            boot_volume_id(str, Optional):
+                The OCID of the boot volume. Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -677,10 +663,15 @@ call. For important details about how pagination works, see
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/bootVolumeAttachments/".format(
-            **{}
-        ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "limit": limit, "page": page, "instanceId": instance_id, "bootVolumeId": boot_volume_id},
+        path="/bootVolumeAttachments/".format(**{}),
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "limit": limit,
+            "page": page,
+            "instanceId": instance_id,
+            "bootVolumeId": boot_volume_id,
+        },
         data=payload,
         headers={},
     )
@@ -690,9 +681,7 @@ call. For important details about how pagination works, see
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -704,55 +693,57 @@ async def attach_boot_volume(
     instance_id: str,
     opc_retry_token: str = None,
     display_name: str = None,
-    encryption_in_transit_type: str = None
+    encryption_in_transit_type: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    AttachBootVolume
-        Attaches the specified boot volume to the specified instance.
 
-    Args:
-        boot_volume_id(str):
-            The OCID of the  boot volume.
+        AttachBootVolume
+            Attaches the specified boot volume to the specified instance.
 
-        instance_id(str):
-            The OCID of the instance.
+        Args:
+            boot_volume_id(str):
+                The OCID of the  boot volume.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            instance_id(str):
+                The OCID of the instance.
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-        encryption_in_transit_type(str, Optional):
-            Refer the top-level definition of encryptionInTransitType.
-The default value is NONE.
-. Defaults to None.
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            encryption_in_transit_type(str, Optional):
+                Refer the top-level definition of encryptionInTransitType.
+    The default value is NONE.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'boot_volume_id': 'bootVolumeId', 'display_name': 'displayName', 'encryption_in_transit_type': 'encryptionInTransitType', 'instance_id': 'instanceId'}
+    payload = {
+        "boot_volume_id": "bootVolumeId",
+        "display_name": "displayName",
+        "encryption_in_transit_type": "encryptionInTransitType",
+        "instance_id": "instanceId",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/bootVolumeAttachments/".format(
-            **{}
-        ),
+        path="/bootVolumeAttachments/".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-retry-token": opc_retry_token},
@@ -763,41 +754,41 @@ The default value is NONE.
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'boot_volume_id': 'bootVolumeId',
-             'compartment_id': 'compartmentId',
-             'display_name': 'displayName',
-             'encryption_in_transit_type': 'encryptionInTransitType',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'is_pv_encryption_in_transit_enabled': 'isPvEncryptionInTransitEnabled',
-             'lifecycle_state': 'lifecycleState',
-             'time_created': 'timeCreated'}
+        {
+            "availability_domain": "availabilityDomain",
+            "boot_volume_id": "bootVolumeId",
+            "compartment_id": "compartmentId",
+            "display_name": "displayName",
+            "encryption_in_transit_type": "encryptionInTransitType",
+            "id": "id",
+            "instance_id": "instanceId",
+            "is_pv_encryption_in_transit_enabled": "isPvEncryptionInTransitEnabled",
+            "lifecycle_state": "lifecycleState",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def get_boot_volume_attachment(
-    hub,
-    ctx,
-    boot_volume_attachment_id: str
+    hub, ctx, boot_volume_attachment_id: str
 ) -> Dict[str, Any]:
     r"""
-    
+
     GetBootVolumeAttachment
         Gets information about the specified boot volume attachment.
 
@@ -809,7 +800,6 @@ async def get_boot_volume_attachment(
         Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -832,63 +822,61 @@ async def get_boot_volume_attachment(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'boot_volume_id': 'bootVolumeId',
-             'compartment_id': 'compartmentId',
-             'display_name': 'displayName',
-             'encryption_in_transit_type': 'encryptionInTransitType',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'is_pv_encryption_in_transit_enabled': 'isPvEncryptionInTransitEnabled',
-             'lifecycle_state': 'lifecycleState',
-             'time_created': 'timeCreated'}
+        {
+            "availability_domain": "availabilityDomain",
+            "boot_volume_id": "bootVolumeId",
+            "compartment_id": "compartmentId",
+            "display_name": "displayName",
+            "encryption_in_transit_type": "encryptionInTransitType",
+            "id": "id",
+            "instance_id": "instanceId",
+            "is_pv_encryption_in_transit_enabled": "isPvEncryptionInTransitEnabled",
+            "lifecycle_state": "lifecycleState",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def detach_boot_volume(
-    hub,
-    ctx,
-    boot_volume_attachment_id: str,
-    if_match: str = None
+    hub, ctx, boot_volume_attachment_id: str, if_match: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    DetachBootVolume
-        Detaches a boot volume from an instance. You must specify the OCID of the boot volume attachment.
 
-    This is an asynchronous operation. The attachment's `lifecycleState` will change to DETACHING temporarily
-    until the attachment is completely removed.
+        DetachBootVolume
+            Detaches a boot volume from an instance. You must specify the OCID of the boot volume attachment.
 
-    Args:
-        boot_volume_attachment_id(str):
-            The OCID of the boot volume attachment.
+        This is an asynchronous operation. The attachment's `lifecycleState` will change to DETACHING temporarily
+        until the attachment is completely removed.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+        Args:
+            boot_volume_attachment_id(str):
+                The OCID of the boot volume attachment.
 
-    Returns:
-        Dict[str, Any]
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -911,9 +899,7 @@ will be updated or deleted only if the etag you provide matches the resource's c
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -923,106 +909,113 @@ async def create_compute_capacity_report(
     ctx,
     availability_domain: str,
     compartment_id: str,
-    shape_availabilities: List[make_dataclass(
-        "shape_availabilities",
-        [
-            ("instance_shape", str), 
-            ("fault_domain", str, field(default=None)), 
-            ("instance_shape_config", make_dataclass(
-            "instance_shape_config",
+    shape_availabilities: List[
+        make_dataclass(
+            "shape_availabilities",
             [
-                ("memory_in_g_bs", float, field(default=None)), 
-                ("nvmes", int, field(default=None)), 
-                ("ocpus", float, field(default=None))
-            ]
-            ), field(default=None))
-        ]
-        )],
+                ("instance_shape", str),
+                ("fault_domain", str, field(default=None)),
+                (
+                    "instance_shape_config",
+                    make_dataclass(
+                        "instance_shape_config",
+                        [
+                            ("memory_in_g_bs", float, field(default=None)),
+                            ("nvmes", int, field(default=None)),
+                            ("ocpus", float, field(default=None)),
+                        ],
+                    ),
+                    field(default=None),
+                ),
+            ],
+        )
+    ],
     opc_request_id: str = None,
-    opc_retry_token: str = None
+    opc_retry_token: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    CreateComputeCapacityReport
-        Generates a report of the host capacity within an availability domain that is available for you
-    to create compute instances. Host capacity is the physical infrastructure that resources such as compute
-    instances run on.
 
-    Use the capacity report to determine whether sufficient capacity is available for a shape before
-    you create an instance or change the shape of an instance.
+        CreateComputeCapacityReport
+            Generates a report of the host capacity within an availability domain that is available for you
+        to create compute instances. Host capacity is the physical infrastructure that resources such as compute
+        instances run on.
 
-    Args:
-        availability_domain(str):
-            The availability domain for the capacity report.
+        Use the capacity report to determine whether sufficient capacity is available for a shape before
+        you create an instance or change the shape of an instance.
 
-Example: `Uocm:PHX-AD-1`
-.
+        Args:
+            availability_domain(str):
+                The availability domain for the capacity report.
 
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) for the compartment. This should always be the root
-compartment.
-.
+    Example: `Uocm:PHX-AD-1`
+    .
 
-        shape_availabilities(List[dict[str, Any]]):
-            Information about the shapes in the capacity report.
-.
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) for the compartment. This should always be the root
+    compartment.
+    .
 
-            * fault_domain (str, Optional):
-                The fault domain for the capacity report.
+            shape_availabilities(List[dict[str, Any]]):
+                Information about the shapes in the capacity report.
+    .
 
-If you do not specify a fault domain, the capacity report includes information about all fault domains.
+                * fault_domain (str, Optional):
+                    The fault domain for the capacity report.
 
-
-            * instance_shape (str):
-                The shape that you want to request a capacity report for. You can enumerate all available shapes by calling
-[ListShapes](#/en/iaas/latest/Shape/ListShapes).
+    If you do not specify a fault domain, the capacity report includes information about all fault domains.
 
 
-            * instance_shape_config (dict[str, Any], Optional):
-                instanceShapeConfig
-
-                * memory_in_g_bs (float, Optional):
-                    The total amount of memory available to the instance, in gigabytes.
+                * instance_shape (str):
+                    The shape that you want to request a capacity report for. You can enumerate all available shapes by calling
+    [ListShapes](#/en/iaas/latest/Shape/ListShapes).
 
 
-                * nvmes (int, Optional):
-                    The number of NVMe drives to be used for storage.
+                * instance_shape_config (dict[str, Any], Optional):
+                    instanceShapeConfig
+
+                    * memory_in_g_bs (float, Optional):
+                        The total amount of memory available to the instance, in gigabytes.
 
 
-                * ocpus (float, Optional):
-                    The total number of OCPUs available to the instance.
+                    * nvmes (int, Optional):
+                        The number of NVMe drives to be used for storage.
 
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+                    * ocpus (float, Optional):
+                        The total number of OCPUs available to the instance.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'availability_domain': 'availabilityDomain', 'compartment_id': 'compartmentId', 'shape_availabilities': 'shapeAvailabilities'}
+    payload = {
+        "availability_domain": "availabilityDomain",
+        "compartment_id": "compartmentId",
+        "shape_availabilities": "shapeAvailabilities",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/computeCapacityReports".format(
-            **{}
-        ),
+        path="/computeCapacityReports".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-request-id": opc_request_id, "opc-retry-token": opc_retry_token},
@@ -1033,24 +1026,26 @@ may be rejected).
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'shape_availabilities': 'shapeAvailabilities',
-             'time_created': 'timeCreated'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "shape_availabilities": "shapeAvailabilities",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -1065,67 +1060,66 @@ async def list_compute_capacity_reservation_instance_shapes(
     page: str = None,
     display_name: str = None,
     sort_by: str = None,
-    sort_order: str = None
+    sort_order: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListComputeCapacityReservationInstanceShapes
-        Lists the shapes that can be reserved within the specified compartment.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        ListComputeCapacityReservationInstanceShapes
+            Lists the shapes that can be reserved within the specified compartment.
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        display_name(str, Optional):
-            A filter to return only resources that match the given display name exactly.
-. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            display_name(str, Optional):
+                A filter to return only resources that match the given display name exactly.
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -1135,10 +1129,16 @@ is case sensitive.
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/computeCapacityReservationInstanceShapes".format(
-            **{}
-        ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "limit": limit, "page": page, "displayName": display_name, "sortBy": sort_by, "sortOrder": sort_order},
+        path="/computeCapacityReservationInstanceShapes".format(**{}),
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "limit": limit,
+            "page": page,
+            "displayName": display_name,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+        },
         data=payload,
         headers={"opc-request-id": opc_request_id},
     )
@@ -1148,9 +1148,7 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -1166,73 +1164,72 @@ async def list_compute_capacity_reservations(
     page: str = None,
     opc_request_id: str = None,
     sort_by: str = None,
-    sort_order: str = None
+    sort_order: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListComputeCapacityReservations
-        Lists the compute capacity reservations that match the specified criteria and compartment.
 
-    You can limit the list by specifying a compute capacity reservation display name
-    (the list will include all the identically-named compute capacity reservations in the compartment).
+        ListComputeCapacityReservations
+            Lists the compute capacity reservations that match the specified criteria and compartment.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        You can limit the list by specifying a compute capacity reservation display name
+        (the list will include all the identically-named compute capacity reservations in the compartment).
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        lifecycle_state(str, Optional):
-            A filter to only return resources that match the given lifecycle state. Defaults to None.
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-        display_name(str, Optional):
-            A filter to return only resources that match the given display name exactly.
-. Defaults to None.
+            lifecycle_state(str, Optional):
+                A filter to only return resources that match the given lifecycle state. Defaults to None.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            display_name(str, Optional):
+                A filter to return only resources that match the given display name exactly.
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -1242,10 +1239,17 @@ is case sensitive.
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/computeCapacityReservations".format(
-            **{}
-        ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "lifecycleState": lifecycle_state, "displayName": display_name, "limit": limit, "page": page, "sortBy": sort_by, "sortOrder": sort_order},
+        path="/computeCapacityReservations".format(**{}),
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "lifecycleState": lifecycle_state,
+            "displayName": display_name,
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+        },
         data=payload,
         headers={"opc-request-id": opc_request_id},
     )
@@ -1255,9 +1259,7 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -1272,155 +1274,170 @@ async def create_compute_capacity_reservation(
     defined_tags: Dict = None,
     display_name: str = None,
     freeform_tags: Dict = None,
-    instance_reservation_configs: List[make_dataclass(
-        "instance_reservation_configs",
-        [
-            ("instance_shape", str), 
-            ("reserved_count", int), 
-            ("cluster_config", make_dataclass(
-            "cluster_config",
+    instance_reservation_configs: List[
+        make_dataclass(
+            "instance_reservation_configs",
             [
-                ("hpc_island_id", str), 
-                ("network_block_ids", List[str], field(default=None))
-            ]
-            ), field(default=None)), 
-            ("fault_domain", str, field(default=None)), 
-            ("instance_shape_config", make_dataclass(
-            "instance_shape_config",
-            [
-                ("memory_in_g_bs", float, field(default=None)), 
-                ("ocpus", float, field(default=None))
-            ]
-            ), field(default=None))
-        ]
-        )] = None,
-    is_default_reservation: bool = None
+                ("instance_shape", str),
+                ("reserved_count", int),
+                (
+                    "cluster_config",
+                    make_dataclass(
+                        "cluster_config",
+                        [
+                            ("hpc_island_id", str),
+                            ("network_block_ids", List[str], field(default=None)),
+                        ],
+                    ),
+                    field(default=None),
+                ),
+                ("fault_domain", str, field(default=None)),
+                (
+                    "instance_shape_config",
+                    make_dataclass(
+                        "instance_shape_config",
+                        [
+                            ("memory_in_g_bs", float, field(default=None)),
+                            ("ocpus", float, field(default=None)),
+                        ],
+                    ),
+                    field(default=None),
+                ),
+            ],
+        )
+    ] = None,
+    is_default_reservation: bool = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    CreateComputeCapacityReservation
-        Creates a new compute capacity reservation in the specified compartment and availability domain.
-    Compute capacity reservations let you reserve instances in a compartment.
-    When you launch an instance using this reservation, you are assured that you have enough space for your instance,
-    and you won't get out of capacity errors.
-    For more information, see [Reserved Capacity](/iaas/Content/Compute/Tasks/reserve-capacity.htm).
 
-    Args:
-        availability_domain(str):
-            The availability domain of this compute capacity reservation.
+        CreateComputeCapacityReservation
+            Creates a new compute capacity reservation in the specified compartment and availability domain.
+        Compute capacity reservations let you reserve instances in a compartment.
+        When you launch an instance using this reservation, you are assured that you have enough space for your instance,
+        and you won't get out of capacity errors.
+        For more information, see [Reserved Capacity](/iaas/Content/Compute/Tasks/reserve-capacity.htm).
 
-Example: `Uocm:PHX-AD-1`
-.
+        Args:
+            availability_domain(str):
+                The availability domain of this compute capacity reservation.
 
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment containing the capacity reservation.
-.
+    Example: `Uocm:PHX-AD-1`
+    .
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment containing the capacity reservation.
+    .
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        instance_reservation_configs(List[dict[str, Any]], Optional):
-            The capacity configurations for the capacity reservation.
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
 
-To use the reservation for the desired shape, specify the shape, count, and
-optionally the fault domain where you want this configuration.
-. Defaults to None.
+            instance_reservation_configs(List[dict[str, Any]], Optional):
+                The capacity configurations for the capacity reservation.
 
-            * cluster_config (dict[str, Any], Optional):
-                clusterConfig
+    To use the reservation for the desired shape, specify the shape, count, and
+    optionally the fault domain where you want this configuration.
+    . Defaults to None.
 
-                * hpc_island_id (str):
-                    The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the HPC island.
+                * cluster_config (dict[str, Any], Optional):
+                    clusterConfig
 
-
-                * network_block_ids (List[str], Optional):
-                    The list of OCIDs of the network blocks.
-
-            * fault_domain (str, Optional):
-                The fault domain to use for instances created using this capacity configuration.
-For more information, see [Fault Domains](/iaas/Content/General/Concepts/regions.htm#fault).
-If you do not specify the fault domain, the capacity is available for an instance
-that does not specify a fault domain. To change the fault domain for a reservation,
-delete the reservation and create a new one in the preferred fault domain.
-
-To retrieve a list of fault domains, use the `ListFaultDomains` operation in
-the [Identity and Access Management Service API](/iaas/api/#/en/identity/20160918/).
-
-Example: `FAULT-DOMAIN-1`
+                    * hpc_island_id (str):
+                        The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the HPC island.
 
 
-            * instance_shape (str):
-                The shape requested when launching instances using reserved capacity.
-The shape determines the number of CPUs, amount of memory,
-and other resources allocated to the instance.
-You can list all available shapes by calling [ListComputeCapacityReservationInstanceShapes](#/en/iaas/computeCapacityReservationInstanceShapes/ListComputeCapacityReservationInstanceShapes).
+                    * network_block_ids (List[str], Optional):
+                        The list of OCIDs of the network blocks.
+
+                * fault_domain (str, Optional):
+                    The fault domain to use for instances created using this capacity configuration.
+    For more information, see [Fault Domains](/iaas/Content/General/Concepts/regions.htm#fault).
+    If you do not specify the fault domain, the capacity is available for an instance
+    that does not specify a fault domain. To change the fault domain for a reservation,
+    delete the reservation and create a new one in the preferred fault domain.
+
+    To retrieve a list of fault domains, use the `ListFaultDomains` operation in
+    the [Identity and Access Management Service API](/iaas/api/#/en/identity/20160918/).
+
+    Example: `FAULT-DOMAIN-1`
 
 
-            * instance_shape_config (dict[str, Any], Optional):
-                instanceShapeConfig
-
-                * memory_in_g_bs (float, Optional):
-                    The total amount of memory available to the instance, in gigabytes.
-
-
-                * ocpus (float, Optional):
-                    The total number of OCPUs available to the instance.
+                * instance_shape (str):
+                    The shape requested when launching instances using reserved capacity.
+    The shape determines the number of CPUs, amount of memory,
+    and other resources allocated to the instance.
+    You can list all available shapes by calling [ListComputeCapacityReservationInstanceShapes](#/en/iaas/computeCapacityReservationInstanceShapes/ListComputeCapacityReservationInstanceShapes).
 
 
-            * reserved_count (int):
-                The total number of instances that can be launched from the capacity configuration.
+                * instance_shape_config (dict[str, Any], Optional):
+                    instanceShapeConfig
 
-        is_default_reservation(bool, Optional):
-            Whether this capacity reservation is the default.
-For more information, see [Capacity Reservations](/iaas/Content/Compute/Tasks/reserve-capacity.htm#default).
-. Defaults to None.
+                    * memory_in_g_bs (float, Optional):
+                        The total amount of memory available to the instance, in gigabytes.
 
-    Returns:
-        Dict[str, Any]
+
+                    * ocpus (float, Optional):
+                        The total number of OCPUs available to the instance.
+
+
+                * reserved_count (int):
+                    The total number of instances that can be launched from the capacity configuration.
+
+            is_default_reservation(bool, Optional):
+                Whether this capacity reservation is the default.
+    For more information, see [Capacity Reservations](/iaas/Content/Compute/Tasks/reserve-capacity.htm#default).
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'availability_domain': 'availabilityDomain', 'compartment_id': 'compartmentId', 'defined_tags': 'definedTags', 'display_name': 'displayName', 'freeform_tags': 'freeformTags', 'instance_reservation_configs': 'instanceReservationConfigs', 'is_default_reservation': 'isDefaultReservation'}
+    payload = {
+        "availability_domain": "availabilityDomain",
+        "compartment_id": "compartmentId",
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "freeform_tags": "freeformTags",
+        "instance_reservation_configs": "instanceReservationConfigs",
+        "is_default_reservation": "isDefaultReservation",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/computeCapacityReservations".format(
-            **{}
-        ),
+        path="/computeCapacityReservations".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-request-id": opc_request_id, "opc-retry-token": opc_retry_token},
@@ -1431,38 +1448,32 @@ For more information, see [Capacity Reservations](/iaas/Content/Compute/Tasks/re
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
 
 async def get_compute_capacity_reservation(
-    hub,
-    ctx,
-    capacity_reservation_id: str,
-    opc_request_id: str = None
+    hub, ctx, capacity_reservation_id: str, opc_request_id: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    GetComputeCapacityReservation
-        Gets information about the specified compute capacity reservation.
 
-    Args:
-        capacity_reservation_id(str):
-            The OCID of the compute capacity reservation.
+        GetComputeCapacityReservation
+            Gets information about the specified compute capacity reservation.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            capacity_reservation_id(str):
+                The OCID of the compute capacity reservation.
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -1485,33 +1496,35 @@ If you need to contact Oracle about a particular request, please provide the req
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'instance_reservation_configs': 'instanceReservationConfigs',
-             'is_default_reservation': 'isDefaultReservation',
-             'lifecycle_state': 'lifecycleState',
-             'reserved_instance_count': 'reservedInstanceCount',
-             'time_created': 'timeCreated',
-             'time_updated': 'timeUpdated',
-             'used_instance_count': 'usedInstanceCount'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "instance_reservation_configs": "instanceReservationConfigs",
+            "is_default_reservation": "isDefaultReservation",
+            "lifecycle_state": "lifecycleState",
+            "reserved_instance_count": "reservedInstanceCount",
+            "time_created": "timeCreated",
+            "time_updated": "timeUpdated",
+            "used_instance_count": "usedInstanceCount",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -1525,137 +1538,152 @@ async def update_compute_capacity_reservation(
     defined_tags: Dict = None,
     display_name: str = None,
     freeform_tags: Dict = None,
-    instance_reservation_configs: List[make_dataclass(
-        "instance_reservation_configs",
-        [
-            ("instance_shape", str), 
-            ("reserved_count", int), 
-            ("cluster_config", make_dataclass(
-            "cluster_config",
+    instance_reservation_configs: List[
+        make_dataclass(
+            "instance_reservation_configs",
             [
-                ("hpc_island_id", str), 
-                ("network_block_ids", List[str], field(default=None))
-            ]
-            ), field(default=None)), 
-            ("fault_domain", str, field(default=None)), 
-            ("instance_shape_config", make_dataclass(
-            "instance_shape_config",
-            [
-                ("memory_in_g_bs", float, field(default=None)), 
-                ("ocpus", float, field(default=None))
-            ]
-            ), field(default=None))
-        ]
-        )] = None,
-    is_default_reservation: bool = None
+                ("instance_shape", str),
+                ("reserved_count", int),
+                (
+                    "cluster_config",
+                    make_dataclass(
+                        "cluster_config",
+                        [
+                            ("hpc_island_id", str),
+                            ("network_block_ids", List[str], field(default=None)),
+                        ],
+                    ),
+                    field(default=None),
+                ),
+                ("fault_domain", str, field(default=None)),
+                (
+                    "instance_shape_config",
+                    make_dataclass(
+                        "instance_shape_config",
+                        [
+                            ("memory_in_g_bs", float, field(default=None)),
+                            ("ocpus", float, field(default=None)),
+                        ],
+                    ),
+                    field(default=None),
+                ),
+            ],
+        )
+    ] = None,
+    is_default_reservation: bool = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    UpdateComputeCapacityReservation
-        Updates the specified capacity reservation and its associated capacity configurations.
-    Fields that are not provided in the request will not be updated. Capacity configurations that are not included will be deleted.
+
+        UpdateComputeCapacityReservation
+            Updates the specified capacity reservation and its associated capacity configurations.
+        Fields that are not provided in the request will not be updated. Capacity configurations that are not included will be deleted.
+        Avoid entering confidential information.
+
+        Args:
+            capacity_reservation_id(str):
+                The OCID of the compute capacity reservation.
+
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
+
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
+
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
     Avoid entering confidential information.
+    . Defaults to None.
 
-    Args:
-        capacity_reservation_id(str):
-            The OCID of the compute capacity reservation.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            instance_reservation_configs(List[dict[str, Any]], Optional):
+                The capacity configurations for the capacity reservation.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+    To use the reservation for the desired shape, specify the shape, count, and
+    optionally the fault domain where you want this configuration.
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+                * cluster_config (dict[str, Any], Optional):
+                    clusterConfig
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
-
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
-
-Example: `{"Department": "Finance"}`
-. Defaults to None.
-
-        instance_reservation_configs(List[dict[str, Any]], Optional):
-            The capacity configurations for the capacity reservation.
-
-To use the reservation for the desired shape, specify the shape, count, and
-optionally the fault domain where you want this configuration.
-. Defaults to None.
-
-            * cluster_config (dict[str, Any], Optional):
-                clusterConfig
-
-                * hpc_island_id (str):
-                    The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the HPC island.
+                    * hpc_island_id (str):
+                        The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the HPC island.
 
 
-                * network_block_ids (List[str], Optional):
-                    The list of OCIDs of the network blocks.
+                    * network_block_ids (List[str], Optional):
+                        The list of OCIDs of the network blocks.
 
-            * fault_domain (str, Optional):
-                The fault domain to use for instances created using this capacity configuration.
-For more information, see [Fault Domains](/iaas/Content/General/Concepts/regions.htm#fault).
-If you do not specify the fault domain, the capacity is available for an instance
-that does not specify a fault domain. To change the fault domain for a reservation,
-delete the reservation and create a new one in the preferred fault domain.
+                * fault_domain (str, Optional):
+                    The fault domain to use for instances created using this capacity configuration.
+    For more information, see [Fault Domains](/iaas/Content/General/Concepts/regions.htm#fault).
+    If you do not specify the fault domain, the capacity is available for an instance
+    that does not specify a fault domain. To change the fault domain for a reservation,
+    delete the reservation and create a new one in the preferred fault domain.
 
-To retrieve a list of fault domains, use the `ListFaultDomains` operation in
-the [Identity and Access Management Service API](/iaas/api/#/en/identity/20160918/).
+    To retrieve a list of fault domains, use the `ListFaultDomains` operation in
+    the [Identity and Access Management Service API](/iaas/api/#/en/identity/20160918/).
 
-Example: `FAULT-DOMAIN-1`
-
-
-            * instance_shape (str):
-                The shape requested when launching instances using reserved capacity.
-The shape determines the number of CPUs, amount of memory,
-and other resources allocated to the instance.
-You can list all available shapes by calling [ListComputeCapacityReservationInstanceShapes](#/en/iaas/computeCapacityReservationInstanceShapes/ListComputeCapacityReservationInstanceShapes).
+    Example: `FAULT-DOMAIN-1`
 
 
-            * instance_shape_config (dict[str, Any], Optional):
-                instanceShapeConfig
-
-                * memory_in_g_bs (float, Optional):
-                    The total amount of memory available to the instance, in gigabytes.
-
-
-                * ocpus (float, Optional):
-                    The total number of OCPUs available to the instance.
+                * instance_shape (str):
+                    The shape requested when launching instances using reserved capacity.
+    The shape determines the number of CPUs, amount of memory,
+    and other resources allocated to the instance.
+    You can list all available shapes by calling [ListComputeCapacityReservationInstanceShapes](#/en/iaas/computeCapacityReservationInstanceShapes/ListComputeCapacityReservationInstanceShapes).
 
 
-            * reserved_count (int):
-                The total number of instances that can be launched from the capacity configuration.
+                * instance_shape_config (dict[str, Any], Optional):
+                    instanceShapeConfig
 
-        is_default_reservation(bool, Optional):
-            Whether this capacity reservation is the default.
-For more information, see [Capacity Reservations](/iaas/Content/Compute/Tasks/reserve-capacity.htm#default).
-. Defaults to None.
+                    * memory_in_g_bs (float, Optional):
+                        The total amount of memory available to the instance, in gigabytes.
 
-    Returns:
-        Dict[str, Any]
+
+                    * ocpus (float, Optional):
+                        The total number of OCPUs available to the instance.
+
+
+                * reserved_count (int):
+                    The total number of instances that can be launched from the capacity configuration.
+
+            is_default_reservation(bool, Optional):
+                Whether this capacity reservation is the default.
+    For more information, see [Capacity Reservations](/iaas/Content/Compute/Tasks/reserve-capacity.htm#default).
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'defined_tags': 'definedTags', 'display_name': 'displayName', 'freeform_tags': 'freeformTags', 'instance_reservation_configs': 'instanceReservationConfigs', 'is_default_reservation': 'isDefaultReservation'}
+    payload = {
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "freeform_tags": "freeformTags",
+        "instance_reservation_configs": "instanceReservationConfigs",
+        "is_default_reservation": "isDefaultReservation",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -1673,9 +1701,7 @@ For more information, see [Capacity Reservations](/iaas/Content/Compute/Tasks/re
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -1685,33 +1711,32 @@ async def delete_compute_capacity_reservation(
     ctx,
     capacity_reservation_id: str,
     opc_request_id: str = None,
-    if_match: str = None
+    if_match: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    DeleteComputeCapacityReservation
-        Deletes the specified compute capacity reservation.
 
-    Args:
-        capacity_reservation_id(str):
-            The OCID of the compute capacity reservation.
+        DeleteComputeCapacityReservation
+            Deletes the specified compute capacity reservation.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            capacity_reservation_id(str):
+                The OCID of the compute capacity reservation.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -1734,9 +1759,7 @@ will be updated or deleted only if the etag you provide matches the resource's c
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -1748,53 +1771,52 @@ async def change_compute_capacity_reservation_compartment(
     compartment_id: str,
     if_match: str = None,
     opc_request_id: str = None,
-    opc_retry_token: str = None
+    opc_retry_token: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ChangeComputeCapacityReservationCompartment
-        Moves a compute capacity reservation into a different compartment. For information about
-    moving resources between compartments, see
-    [Moving Resources to a Different Compartment](/iaas/Content/Identity/Tasks/managingcompartments.htm#moveRes).
 
-    Args:
-        capacity_reservation_id(str):
-            The OCID of the compute capacity reservation.
+        ChangeComputeCapacityReservationCompartment
+            Moves a compute capacity reservation into a different compartment. For information about
+        moving resources between compartments, see
+        [Moving Resources to a Different Compartment](/iaas/Content/Identity/Tasks/managingcompartments.htm#moveRes).
 
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment
-to move the compute capacity reservation to.
-.
+        Args:
+            capacity_reservation_id(str):
+                The OCID of the compute capacity reservation.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment
+    to move the compute capacity reservation to.
+    .
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'compartment_id': 'compartmentId'}
+    payload = {"compartment_id": "compartmentId"}
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -1804,7 +1826,11 @@ may be rejected).
         ),
         query_params={},
         data=payload,
-        headers={"if-match": if_match, "opc-request-id": opc_request_id, "opc-retry-token": opc_retry_token},
+        headers={
+            "if-match": if_match,
+            "opc-request-id": opc_request_id,
+            "opc-retry-token": opc_retry_token,
+        },
     )
 
     if not ret["result"]:
@@ -1812,9 +1838,7 @@ may be rejected).
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -1829,66 +1853,65 @@ async def list_compute_capacity_reservation_instances(
     limit: int = None,
     page: str = None,
     sort_by: str = None,
-    sort_order: str = None
+    sort_order: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListComputeCapacityReservationInstances
-        Lists the instances launched under a capacity reservation. You can filter results by specifying criteria.
 
-    Args:
-        capacity_reservation_id(str):
-            The OCID of the compute capacity reservation.
+        ListComputeCapacityReservationInstances
+            Lists the instances launched under a capacity reservation. You can filter results by specifying criteria.
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+        Args:
+            capacity_reservation_id(str):
+                The OCID of the compute capacity reservation.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        compartment_id(str, Optional):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment. Defaults to None.
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            compartment_id(str, Optional):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment. Defaults to None.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -1901,7 +1924,14 @@ is case sensitive.
         path="/computeCapacityReservations/{capacityReservationId}/instances".format(
             **{"capacityReservationId": capacity_reservation_id}
         ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "limit": limit, "page": page, "sortBy": sort_by, "sortOrder": sort_order},
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+        },
         data=payload,
         headers={"opc-request-id": opc_request_id},
     )
@@ -1911,9 +1941,7 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -1928,68 +1956,67 @@ async def list_compute_clusters(
     page: str = None,
     sort_by: str = None,
     sort_order: str = None,
-    opc_request_id: str = None
+    opc_request_id: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListComputeCluster
-        Lists the compute clusters in the specified compartment.
-    A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory access (RDMA) network group.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        ListComputeCluster
+            Lists the compute clusters in the specified compartment.
+        A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory access (RDMA) network group.
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        display_name(str, Optional):
-            A filter to return only resources that match the given display name exactly.
-. Defaults to None.
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            display_name(str, Optional):
+                A filter to return only resources that match the given display name exactly.
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -1999,10 +2026,16 @@ If you need to contact Oracle about a particular request, please provide the req
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/computeClusters".format(
-            **{}
-        ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "displayName": display_name, "limit": limit, "page": page, "sortBy": sort_by, "sortOrder": sort_order},
+        path="/computeClusters".format(**{}),
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "displayName": display_name,
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+        },
         data=payload,
         headers={"opc-request-id": opc_request_id},
     )
@@ -2012,21 +2045,19 @@ If you need to contact Oracle about a particular request, please provide the req
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
-    resource_parameters = OrderedDict(
-                {'items': 'items'}
-    )
+    resource_parameters = OrderedDict({"items": "items"})
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -2040,84 +2071,87 @@ async def create_compute_cluster(
     opc_request_id: str = None,
     defined_tags: Dict = None,
     display_name: str = None,
-    freeform_tags: Dict = None
+    freeform_tags: Dict = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    CreateComputeCluster
-        Creates an empty [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm). A compute cluster
-    is a remote direct memory access (RDMA) network group.
 
-    After the compute cluster is created, you can use the compute cluster's OCID with the
-    [LaunchInstance](#/en/iaas/latest/Instance/LaunchInstance) operation to create instances in the compute cluster.
-    The instances must be created in the same compartment and availability domain as the cluster.
+        CreateComputeCluster
+            Creates an empty [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm). A compute cluster
+        is a remote direct memory access (RDMA) network group.
 
-    Use compute clusters when you want to manage instances in the cluster individually, or when you want
-    to use different types of instances in the RDMA network group.
+        After the compute cluster is created, you can use the compute cluster's OCID with the
+        [LaunchInstance](#/en/iaas/latest/Instance/LaunchInstance) operation to create instances in the compute cluster.
+        The instances must be created in the same compartment and availability domain as the cluster.
 
-    If you want predictable capacity for a specific number of identical instances that are managed as a group,
-    create a cluster network that uses instance pools by using the
-    [CreateClusterNetwork](#/en/iaas/latest/ClusterNetwork/CreateClusterNetwork) operation.
+        Use compute clusters when you want to manage instances in the cluster individually, or when you want
+        to use different types of instances in the RDMA network group.
 
-    Args:
-        availability_domain(str):
-            The availability domain to place the compute cluster in.
+        If you want predictable capacity for a specific number of identical instances that are managed as a group,
+        create a cluster network that uses instance pools by using the
+        [CreateClusterNetwork](#/en/iaas/latest/ClusterNetwork/CreateClusterNetwork) operation.
 
-Example: `Uocm:PHX-AD-1`
-.
+        Args:
+            availability_domain(str):
+                The availability domain to place the compute cluster in.
 
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+    Example: `Uocm:PHX-AD-1`
+    .
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-    Returns:
-        Dict[str, Any]
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'availability_domain': 'availabilityDomain', 'compartment_id': 'compartmentId', 'defined_tags': 'definedTags', 'display_name': 'displayName', 'freeform_tags': 'freeformTags'}
+    payload = {
+        "availability_domain": "availabilityDomain",
+        "compartment_id": "compartmentId",
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "freeform_tags": "freeformTags",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/computeClusters".format(
-            **{}
-        ),
+        path="/computeClusters".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-retry-token": opc_retry_token, "opc-request-id": opc_request_id},
@@ -2128,61 +2162,59 @@ Example: `{"Department": "Finance"}`
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'lifecycle_state': 'lifecycleState',
-             'time_created': 'timeCreated'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "lifecycle_state": "lifecycleState",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def get_compute_cluster(
-    hub,
-    ctx,
-    compute_cluster_id: str,
-    opc_request_id: str = None
+    hub, ctx, compute_cluster_id: str, opc_request_id: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    GetComputeCluster
-        Gets information about a compute cluster. A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm)
-    is a remote direct memory access (RDMA) network group.
 
-    Args:
-        compute_cluster_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compute cluster.
-A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory
-access (RDMA) network group.
-.
+        GetComputeCluster
+            Gets information about a compute cluster. A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm)
+        is a remote direct memory access (RDMA) network group.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            compute_cluster_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compute cluster.
+    A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory
+    access (RDMA) network group.
+    .
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -2205,28 +2237,30 @@ If you need to contact Oracle about a particular request, please provide the req
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'lifecycle_state': 'lifecycleState',
-             'time_created': 'timeCreated'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "lifecycle_state": "lifecycleState",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -2240,75 +2274,78 @@ async def update_compute_cluster(
     if_match: str = None,
     defined_tags: Dict = None,
     display_name: str = None,
-    freeform_tags: Dict = None
+    freeform_tags: Dict = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    UpdateComputeCluster
-        Updates a compute cluster. A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a
-    remote direct memory access (RDMA) network group.
 
-    To create instances within a compute cluster, use the [LaunchInstance](#/en/iaas/latest/Instance/LaunchInstance)
-    operation.
+        UpdateComputeCluster
+            Updates a compute cluster. A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a
+        remote direct memory access (RDMA) network group.
 
-    To delete instances from a compute cluster, use the [TerminateInstance](#/en/iaas/latest/Instance/TerminateInstance)
-    operation.
+        To create instances within a compute cluster, use the [LaunchInstance](#/en/iaas/latest/Instance/LaunchInstance)
+        operation.
 
-    Args:
-        compute_cluster_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compute cluster.
-A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory
-access (RDMA) network group.
-.
+        To delete instances from a compute cluster, use the [TerminateInstance](#/en/iaas/latest/Instance/TerminateInstance)
+        operation.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            compute_cluster_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compute cluster.
+    A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory
+    access (RDMA) network group.
+    .
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-    Returns:
-        Dict[str, Any]
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'defined_tags': 'definedTags', 'display_name': 'displayName', 'freeform_tags': 'freeformTags'}
+    payload = {
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "freeform_tags": "freeformTags",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -2318,7 +2355,11 @@ Example: `{"Department": "Finance"}`
         ),
         query_params={},
         data=payload,
-        headers={"opc-request-id": opc_request_id, "opc-retry-token": opc_retry_token, "if-match": if_match},
+        headers={
+            "opc-request-id": opc_request_id,
+            "opc-retry-token": opc_retry_token,
+            "if-match": if_match,
+        },
     )
 
     if not ret["result"]:
@@ -2326,71 +2367,68 @@ Example: `{"Department": "Finance"}`
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'lifecycle_state': 'lifecycleState',
-             'time_created': 'timeCreated'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "lifecycle_state": "lifecycleState",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def delete_compute_cluster(
-    hub,
-    ctx,
-    compute_cluster_id: str,
-    opc_request_id: str = None,
-    if_match: str = None
+    hub, ctx, compute_cluster_id: str, opc_request_id: str = None, if_match: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    DeleteComputeCluster
-        Deletes a compute cluster. A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a
-    remote direct memory access (RDMA) network group.
 
-    Before you delete a compute cluster, first delete all instances in the cluster by using
-    the [TerminateInstance](#/en/iaas/latest/Instance/TerminateInstance) operation.
+        DeleteComputeCluster
+            Deletes a compute cluster. A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a
+        remote direct memory access (RDMA) network group.
 
-    Args:
-        compute_cluster_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compute cluster.
-A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory
-access (RDMA) network group.
-.
+        Before you delete a compute cluster, first delete all instances in the cluster by using
+        the [TerminateInstance](#/en/iaas/latest/Instance/TerminateInstance) operation.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            compute_cluster_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compute cluster.
+    A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory
+    access (RDMA) network group.
+    .
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -2413,9 +2451,7 @@ will be updated or deleted only if the etag you provide matches the resource's c
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -2427,57 +2463,56 @@ async def change_compute_cluster_compartment(
     compartment_id: str,
     if_match: str = None,
     opc_request_id: str = None,
-    opc_retry_token: str = None
+    opc_retry_token: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    MoveComputeCluster
-        Moves a compute cluster into a different compartment within the same tenancy.
-    A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory access (RDMA) network group.
 
-    For information about moving resources between compartments, see
-    [Moving Resources to a Different Compartment](/iaas/Content/Identity/Tasks/managingcompartments.htm#moveRes).
+        MoveComputeCluster
+            Moves a compute cluster into a different compartment within the same tenancy.
+        A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory access (RDMA) network group.
 
-    Args:
-        compute_cluster_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compute cluster.
-A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory
-access (RDMA) network group.
-.
+        For information about moving resources between compartments, see
+        [Moving Resources to a Different Compartment](/iaas/Content/Identity/Tasks/managingcompartments.htm#moveRes).
 
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment to move the compute cluster to.
-.
+        Args:
+            compute_cluster_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compute cluster.
+    A [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) is a remote direct memory
+    access (RDMA) network group.
+    .
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment to move the compute cluster to.
+    .
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'compartment_id': 'compartmentId'}
+    payload = {"compartment_id": "compartmentId"}
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -2487,7 +2522,11 @@ may be rejected).
         ),
         query_params={},
         data=payload,
-        headers={"if-match": if_match, "opc-request-id": opc_request_id, "opc-retry-token": opc_retry_token},
+        headers={
+            "if-match": if_match,
+            "opc-request-id": opc_request_id,
+            "opc-retry-token": opc_retry_token,
+        },
     )
 
     if not ret["result"]:
@@ -2495,9 +2534,7 @@ may be rejected).
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -2510,57 +2547,56 @@ async def list_compute_global_image_capability_schemas(
     limit: int = None,
     page: str = None,
     sort_by: str = None,
-    sort_order: str = None
+    sort_order: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListComputeGlobalImageCapabilitySchemas
-        Lists Compute Global Image Capability Schema in the specified compartment.
 
-    Args:
-        compartment_id(str, Optional):
-            A filter to return only resources that match the given compartment OCID exactly.
-. Defaults to None.
+        ListComputeGlobalImageCapabilitySchemas
+            Lists Compute Global Image Capability Schema in the specified compartment.
 
-        display_name(str, Optional):
-            A filter to return only resources that match the given display name exactly.
-. Defaults to None.
+        Args:
+            compartment_id(str, Optional):
+                A filter to return only resources that match the given compartment OCID exactly.
+    . Defaults to None.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            display_name(str, Optional):
+                A filter to return only resources that match the given display name exactly.
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -2570,10 +2606,15 @@ is case sensitive.
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/computeGlobalImageCapabilitySchemas".format(
-            **{}
-        ),
-        query_params={"compartmentId": compartment_id, "displayName": display_name, "limit": limit, "page": page, "sortBy": sort_by, "sortOrder": sort_order},
+        path="/computeGlobalImageCapabilitySchemas".format(**{}),
+        query_params={
+            "compartmentId": compartment_id,
+            "displayName": display_name,
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+        },
         data=payload,
         headers={},
     )
@@ -2583,20 +2624,16 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
 
 async def get_compute_global_image_capability_schema(
-    hub,
-    ctx,
-    compute_global_image_capability_schema_id: str
+    hub, ctx, compute_global_image_capability_schema_id: str
 ) -> Dict[str, Any]:
     r"""
-    
+
     GetComputeGlobalImageCapabilitySchema
         Gets the specified Compute Global Image Capability Schema
 
@@ -2609,7 +2646,6 @@ async def get_compute_global_image_capability_schema(
 
     """
 
-
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
@@ -2619,7 +2655,9 @@ async def get_compute_global_image_capability_schema(
         ctx,
         method="get",
         path="/computeGlobalImageCapabilitySchemas/{computeGlobalImageCapabilitySchemaId}".format(
-            **{"computeGlobalImageCapabilitySchemaId": compute_global_image_capability_schema_id}
+            **{
+                "computeGlobalImageCapabilitySchemaId": compute_global_image_capability_schema_id
+            }
         ),
         query_params={},
         data=payload,
@@ -2631,27 +2669,29 @@ async def get_compute_global_image_capability_schema(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'compartment_id': 'compartmentId',
-             'current_version_name': 'currentVersionName',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'time_created': 'timeCreated'}
+        {
+            "compartment_id": "compartmentId",
+            "current_version_name": "currentVersionName",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -2664,56 +2704,55 @@ async def list_compute_global_image_capability_schema_versions(
     limit: int = None,
     page: str = None,
     sort_by: str = None,
-    sort_order: str = None
+    sort_order: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListComputeGlobalImageCapabilitySchemaVersions
-        Lists Compute Global Image Capability Schema versions in the specified compartment.
 
-    Args:
-        compute_global_image_capability_schema_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compute global image capability schema.
+        ListComputeGlobalImageCapabilitySchemaVersions
+            Lists Compute Global Image Capability Schema versions in the specified compartment.
 
-        display_name(str, Optional):
-            A filter to return only resources that match the given display name exactly.
-. Defaults to None.
+        Args:
+            compute_global_image_capability_schema_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compute global image capability schema.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            display_name(str, Optional):
+                A filter to return only resources that match the given display name exactly.
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -2724,9 +2763,17 @@ is case sensitive.
         ctx,
         method="get",
         path="/computeGlobalImageCapabilitySchemas/{computeGlobalImageCapabilitySchemaId}/versions".format(
-            **{"computeGlobalImageCapabilitySchemaId": compute_global_image_capability_schema_id}
+            **{
+                "computeGlobalImageCapabilitySchemaId": compute_global_image_capability_schema_id
+            }
         ),
-        query_params={"displayName": display_name, "limit": limit, "page": page, "sortBy": sort_by, "sortOrder": sort_order},
+        query_params={
+            "displayName": display_name,
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+        },
         data=payload,
         headers={},
     )
@@ -2736,9 +2783,7 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -2747,10 +2792,10 @@ async def get_compute_global_image_capability_schema_version(
     hub,
     ctx,
     compute_global_image_capability_schema_id: str,
-    compute_global_image_capability_schema_version_name: str
+    compute_global_image_capability_schema_version_name: str,
 ) -> Dict[str, Any]:
     r"""
-    
+
     GetComputeGlobalImageCapabilitySchemaVersion
         Gets the specified Compute Global Image Capability Schema Version
 
@@ -2766,7 +2811,6 @@ async def get_compute_global_image_capability_schema_version(
 
     """
 
-
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
@@ -2776,7 +2820,10 @@ async def get_compute_global_image_capability_schema_version(
         ctx,
         method="get",
         path="/computeGlobalImageCapabilitySchemas/{computeGlobalImageCapabilitySchemaId}/versions/{computeGlobalImageCapabilitySchemaVersionName}".format(
-            **{"computeGlobalImageCapabilitySchemaId": compute_global_image_capability_schema_id, "computeGlobalImageCapabilitySchemaVersionName": compute_global_image_capability_schema_version_name}
+            **{
+                "computeGlobalImageCapabilitySchemaId": compute_global_image_capability_schema_id,
+                "computeGlobalImageCapabilitySchemaVersionName": compute_global_image_capability_schema_version_name,
+            }
         ),
         query_params={},
         data=payload,
@@ -2788,25 +2835,27 @@ async def get_compute_global_image_capability_schema_version(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'compute_global_image_capability_schema_id': 'computeGlobalImageCapabilitySchemaId',
-             'display_name': 'displayName',
-             'name': 'name',
-             'schema_data': 'schemaData',
-             'time_created': 'timeCreated'}
+        {
+            "compute_global_image_capability_schema_id": "computeGlobalImageCapabilitySchemaId",
+            "display_name": "displayName",
+            "name": "name",
+            "schema_data": "schemaData",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -2820,60 +2869,59 @@ async def list_compute_image_capability_schemas(
     limit: int = None,
     page: str = None,
     sort_by: str = None,
-    sort_order: str = None
+    sort_order: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListComputeImageCapabilitySchemas
-        Lists Compute Image Capability Schema in the specified compartment. You can also query by a specific imageId.
 
-    Args:
-        compartment_id(str, Optional):
-            A filter to return only resources that match the given compartment OCID exactly.
-. Defaults to None.
+        ListComputeImageCapabilitySchemas
+            Lists Compute Image Capability Schema in the specified compartment. You can also query by a specific imageId.
 
-        image_id(str, Optional):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of an image. Defaults to None.
+        Args:
+            compartment_id(str, Optional):
+                A filter to return only resources that match the given compartment OCID exactly.
+    . Defaults to None.
 
-        display_name(str, Optional):
-            A filter to return only resources that match the given display name exactly.
-. Defaults to None.
+            image_id(str, Optional):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of an image. Defaults to None.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            display_name(str, Optional):
+                A filter to return only resources that match the given display name exactly.
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -2883,10 +2931,16 @@ is case sensitive.
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/computeImageCapabilitySchemas".format(
-            **{}
-        ),
-        query_params={"compartmentId": compartment_id, "imageId": image_id, "displayName": display_name, "limit": limit, "page": page, "sortBy": sort_by, "sortOrder": sort_order},
+        path="/computeImageCapabilitySchemas".format(**{}),
+        query_params={
+            "compartmentId": compartment_id,
+            "imageId": image_id,
+            "displayName": display_name,
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+        },
         data=payload,
         headers={},
     )
@@ -2896,9 +2950,7 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -2913,72 +2965,77 @@ async def create_compute_image_capability_schema(
     opc_retry_token: str = None,
     defined_tags: Dict = None,
     display_name: str = None,
-    freeform_tags: Dict = None
+    freeform_tags: Dict = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    CreateComputeImageCapabilitySchema
-        Creates compute image capability schema.
 
-    Args:
-        compartment_id(str):
-            The OCID of the compartment that contains the resource.
+        CreateComputeImageCapabilitySchema
+            Creates compute image capability schema.
 
-        compute_global_image_capability_schema_version_name(str):
-            The name of the compute global image capability schema version
-.
+        Args:
+            compartment_id(str):
+                The OCID of the compartment that contains the resource.
 
-        image_id(str):
-            The ocid of the image
-.
+            compute_global_image_capability_schema_version_name(str):
+                The name of the compute global image capability schema version
+    .
 
-        schema_data(Dict):
-            The map of each capability name to its ImageCapabilitySchemaDescriptor.
+            image_id(str):
+                The ocid of the image
+    .
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            schema_data(Dict):
+                The map of each capability name to its ImageCapabilitySchemaDescriptor.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-    Returns:
-        Dict[str, Any]
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'compartment_id': 'compartmentId', 'compute_global_image_capability_schema_version_name': 'computeGlobalImageCapabilitySchemaVersionName', 'defined_tags': 'definedTags', 'display_name': 'displayName', 'freeform_tags': 'freeformTags', 'image_id': 'imageId', 'schema_data': 'schemaData'}
+    payload = {
+        "compartment_id": "compartmentId",
+        "compute_global_image_capability_schema_version_name": "computeGlobalImageCapabilitySchemaVersionName",
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "freeform_tags": "freeformTags",
+        "image_id": "imageId",
+        "schema_data": "schemaData",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/computeImageCapabilitySchemas".format(
-            **{}
-        ),
+        path="/computeImageCapabilitySchemas".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-retry-token": opc_retry_token},
@@ -2989,58 +3046,56 @@ Example: `{"Department": "Finance"}`
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'compartment_id': 'compartmentId',
-             'compute_global_image_capability_schema_id': 'computeGlobalImageCapabilitySchemaId',
-             'compute_global_image_capability_schema_version_name': 'computeGlobalImageCapabilitySchemaVersionName',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'image_id': 'imageId',
-             'schema_data': 'schemaData',
-             'time_created': 'timeCreated'}
+        {
+            "compartment_id": "compartmentId",
+            "compute_global_image_capability_schema_id": "computeGlobalImageCapabilitySchemaId",
+            "compute_global_image_capability_schema_version_name": "computeGlobalImageCapabilitySchemaVersionName",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "image_id": "imageId",
+            "schema_data": "schemaData",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def get_compute_image_capability_schema(
-    hub,
-    ctx,
-    compute_image_capability_schema_id: str,
-    is_merge_enabled: bool = None
+    hub, ctx, compute_image_capability_schema_id: str, is_merge_enabled: bool = None
 ) -> Dict[str, Any]:
     r"""
-    
-    GetComputeImageCapabilitySchema
-        Gets the specified Compute Image Capability Schema
 
-    Args:
-        compute_image_capability_schema_id(str):
-            The id of the compute image capability schema or the image ocid.
+        GetComputeImageCapabilitySchema
+            Gets the specified Compute Image Capability Schema
 
-        is_merge_enabled(bool, Optional):
-            Merge the image capability schema with the global image capability schema
-. Defaults to None.
+        Args:
+            compute_image_capability_schema_id(str):
+                The id of the compute image capability schema or the image ocid.
 
-    Returns:
-        Dict[str, Any]
+            is_merge_enabled(bool, Optional):
+                Merge the image capability schema with the global image capability schema
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -3063,30 +3118,32 @@ async def get_compute_image_capability_schema(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'compartment_id': 'compartmentId',
-             'compute_global_image_capability_schema_id': 'computeGlobalImageCapabilitySchemaId',
-             'compute_global_image_capability_schema_version_name': 'computeGlobalImageCapabilitySchemaVersionName',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'image_id': 'imageId',
-             'schema_data': 'schemaData',
-             'time_created': 'timeCreated'}
+        {
+            "compartment_id": "compartmentId",
+            "compute_global_image_capability_schema_id": "computeGlobalImageCapabilitySchemaId",
+            "compute_global_image_capability_schema_version_name": "computeGlobalImageCapabilitySchemaVersionName",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "image_id": "imageId",
+            "schema_data": "schemaData",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -3099,55 +3156,59 @@ async def update_compute_image_capability_schema(
     defined_tags: Dict = None,
     display_name: str = None,
     freeform_tags: Dict = None,
-    schema_data: Dict = None
+    schema_data: Dict = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    UpdateComputeImageCapabilitySchema
-        Updates the specified Compute Image Capability Schema
 
-    Args:
-        compute_image_capability_schema_id(str):
-            The id of the compute image capability schema or the image ocid.
+        UpdateComputeImageCapabilitySchema
+            Updates the specified Compute Image Capability Schema
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+        Args:
+            compute_image_capability_schema_id(str):
+                The id of the compute image capability schema or the image ocid.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        schema_data(Dict, Optional):
-            The map of each capability name to its ImageCapabilitySchemaDescriptor. Defaults to None.
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            schema_data(Dict, Optional):
+                The map of each capability name to its ImageCapabilitySchemaDescriptor. Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'defined_tags': 'definedTags', 'display_name': 'displayName', 'freeform_tags': 'freeformTags', 'schema_data': 'schemaData'}
+    payload = {
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "freeform_tags": "freeformTags",
+        "schema_data": "schemaData",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -3165,60 +3226,58 @@ Example: `{"Department": "Finance"}`
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'compartment_id': 'compartmentId',
-             'compute_global_image_capability_schema_id': 'computeGlobalImageCapabilitySchemaId',
-             'compute_global_image_capability_schema_version_name': 'computeGlobalImageCapabilitySchemaVersionName',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'image_id': 'imageId',
-             'schema_data': 'schemaData',
-             'time_created': 'timeCreated'}
+        {
+            "compartment_id": "compartmentId",
+            "compute_global_image_capability_schema_id": "computeGlobalImageCapabilitySchemaId",
+            "compute_global_image_capability_schema_version_name": "computeGlobalImageCapabilitySchemaVersionName",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "image_id": "imageId",
+            "schema_data": "schemaData",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def delete_compute_image_capability_schema(
-    hub,
-    ctx,
-    compute_image_capability_schema_id: str,
-    if_match: str = None
+    hub, ctx, compute_image_capability_schema_id: str, if_match: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    DeleteComputeImageCapabilitySchema
-        Deletes the specified Compute Image Capability Schema
 
-    Args:
-        compute_image_capability_schema_id(str):
-            The id of the compute image capability schema or the image ocid.
+        DeleteComputeImageCapabilitySchema
+            Deletes the specified Compute Image Capability Schema
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+        Args:
+            compute_image_capability_schema_id(str):
+                The id of the compute image capability schema or the image ocid.
 
-    Returns:
-        Dict[str, Any]
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -3241,9 +3300,7 @@ will be updated or deleted only if the etag you provide matches the resource's c
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -3255,53 +3312,52 @@ async def change_compute_image_capability_schema_compartment(
     compartment_id: str,
     if_match: str = None,
     opc_request_id: str = None,
-    opc_retry_token: str = None
+    opc_retry_token: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ChangeComputeImageCapabilitySchemaCompartment
-        Moves a compute image capability schema into a different compartment within the same tenancy.
-    For information about moving resources between compartments, see
-            [Moving Resources to a Different Compartment](/iaas/Content/Identity/Tasks/managingcompartments.htm#moveRes).
 
-    Args:
-        compute_image_capability_schema_id(str):
-            The id of the compute image capability schema or the image ocid.
+        ChangeComputeImageCapabilitySchemaCompartment
+            Moves a compute image capability schema into a different compartment within the same tenancy.
+        For information about moving resources between compartments, see
+                [Moving Resources to a Different Compartment](/iaas/Content/Identity/Tasks/managingcompartments.htm#moveRes).
 
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment to
-move the instance configuration to.
-.
+        Args:
+            compute_image_capability_schema_id(str):
+                The id of the compute image capability schema or the image ocid.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment to
+    move the instance configuration to.
+    .
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'compartment_id': 'compartmentId'}
+    payload = {"compartment_id": "compartmentId"}
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -3311,7 +3367,11 @@ may be rejected).
         ),
         query_params={},
         data=payload,
-        headers={"if-match": if_match, "opc-request-id": opc_request_id, "opc-retry-token": opc_retry_token},
+        headers={
+            "if-match": if_match,
+            "opc-request-id": opc_request_id,
+            "opc-retry-token": opc_retry_token,
+        },
     )
 
     if not ret["result"]:
@@ -3319,9 +3379,7 @@ may be rejected).
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -3334,52 +3392,51 @@ async def list_dedicated_vm_host_instance_shapes(
     dedicated_vm_host_shape: str = None,
     limit: int = None,
     page: str = None,
-    opc_request_id: str = None
+    opc_request_id: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListDedicatedVmHostInstanceShapes
-        Lists the shapes that can be used to launch a virtual machine instance on a dedicated virtual machine host within the specified compartment.
-    You can filter the list by compatibility with a specific dedicated virtual machine host shape.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        ListDedicatedVmHostInstanceShapes
+            Lists the shapes that can be used to launch a virtual machine instance on a dedicated virtual machine host within the specified compartment.
+        You can filter the list by compatibility with a specific dedicated virtual machine host shape.
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        dedicated_vm_host_shape(str, Optional):
-            Dedicated VM host shape name
-. Defaults to None.
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            dedicated_vm_host_shape(str, Optional):
+                Dedicated VM host shape name
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -3389,10 +3446,14 @@ If you need to contact Oracle about a particular request, please provide the req
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/dedicatedVmHostInstanceShapes".format(
-            **{}
-        ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "dedicatedVmHostShape": dedicated_vm_host_shape, "limit": limit, "page": page},
+        path="/dedicatedVmHostInstanceShapes".format(**{}),
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "dedicatedVmHostShape": dedicated_vm_host_shape,
+            "limit": limit,
+            "page": page,
+        },
         data=payload,
         headers={"opc-request-id": opc_request_id},
     )
@@ -3402,9 +3463,7 @@ If you need to contact Oracle about a particular request, please provide the req
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -3417,51 +3476,50 @@ async def list_dedicated_vm_host_shapes(
     instance_shape_name: str = None,
     limit: int = None,
     page: str = None,
-    opc_request_id: str = None
+    opc_request_id: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListDedicatedVmHostShapes
-        Lists the shapes that can be used to launch a dedicated virtual machine host within the specified compartment.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        ListDedicatedVmHostShapes
+            Lists the shapes that can be used to launch a dedicated virtual machine host within the specified compartment.
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        instance_shape_name(str, Optional):
-            The name for the instance's shape.
-. Defaults to None.
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            instance_shape_name(str, Optional):
+                The name for the instance's shape.
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -3471,10 +3529,14 @@ If you need to contact Oracle about a particular request, please provide the req
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/dedicatedVmHostShapes".format(
-            **{}
-        ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "instanceShapeName": instance_shape_name, "limit": limit, "page": page},
+        path="/dedicatedVmHostShapes".format(**{}),
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "instanceShapeName": instance_shape_name,
+            "limit": limit,
+            "page": page,
+        },
         data=payload,
         headers={"opc-request-id": opc_request_id},
     )
@@ -3484,9 +3546,7 @@ If you need to contact Oracle about a particular request, please provide the req
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -3505,83 +3565,82 @@ async def list_dedicated_vm_hosts(
     sort_by: str = None,
     sort_order: str = None,
     remaining_memory_in_g_bs_greater_than_or_equal_to: float = None,
-    remaining_ocpus_greater_than_or_equal_to: float = None
+    remaining_ocpus_greater_than_or_equal_to: float = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListDedicatedVmHosts
-        Returns the list of dedicated virtual machine hosts that match the specified criteria in the specified compartment.
 
-    You can limit the list by specifying a dedicated virtual machine host display name. The list will include all the identically-named
-    dedicated virtual machine hosts in the compartment.
+        ListDedicatedVmHosts
+            Returns the list of dedicated virtual machine hosts that match the specified criteria in the specified compartment.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        You can limit the list by specifying a dedicated virtual machine host display name. The list will include all the identically-named
+        dedicated virtual machine hosts in the compartment.
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        lifecycle_state(str, Optional):
-            A filter to only return resources that match the given lifecycle state. Defaults to None.
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-        display_name(str, Optional):
-            A filter to return only resources that match the given display name exactly.
-. Defaults to None.
+            lifecycle_state(str, Optional):
+                A filter to only return resources that match the given lifecycle state. Defaults to None.
 
-        instance_shape_name(str, Optional):
-            The name for the instance's shape.
-. Defaults to None.
+            display_name(str, Optional):
+                A filter to return only resources that match the given display name exactly.
+    . Defaults to None.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            instance_shape_name(str, Optional):
+                The name for the instance's shape.
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-        remaining_memory_in_g_bs_greater_than_or_equal_to(float, Optional):
-            The remaining memory of the dedicated VM host, in GBs. Defaults to None.
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
 
-        remaining_ocpus_greater_than_or_equal_to(float, Optional):
-            The available OCPUs of the dedicated VM host. Defaults to None.
+            remaining_memory_in_g_bs_greater_than_or_equal_to(float, Optional):
+                The remaining memory of the dedicated VM host, in GBs. Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            remaining_ocpus_greater_than_or_equal_to(float, Optional):
+                The available OCPUs of the dedicated VM host. Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -3591,10 +3650,20 @@ is case sensitive.
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/dedicatedVmHosts".format(
-            **{}
-        ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "lifecycleState": lifecycle_state, "displayName": display_name, "instanceShapeName": instance_shape_name, "limit": limit, "page": page, "sortBy": sort_by, "sortOrder": sort_order, "remainingMemoryInGBsGreaterThanOrEqualTo": remaining_memory_in_g_bs_greater_than_or_equal_to, "remainingOcpusGreaterThanOrEqualTo": remaining_ocpus_greater_than_or_equal_to},
+        path="/dedicatedVmHosts".format(**{}),
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "lifecycleState": lifecycle_state,
+            "displayName": display_name,
+            "instanceShapeName": instance_shape_name,
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+            "remainingMemoryInGBsGreaterThanOrEqualTo": remaining_memory_in_g_bs_greater_than_or_equal_to,
+            "remainingOcpusGreaterThanOrEqualTo": remaining_ocpus_greater_than_or_equal_to,
+        },
         data=payload,
         headers={"opc-request-id": opc_request_id},
     )
@@ -3604,9 +3673,7 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -3622,92 +3689,97 @@ async def create_dedicated_vm_host(
     defined_tags: Dict = None,
     display_name: str = None,
     fault_domain: str = None,
-    freeform_tags: Dict = None
+    freeform_tags: Dict = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    CreateDedicatedVmHost
-        Creates a new dedicated virtual machine host in the specified compartment and the specified availability domain.
-    Dedicated virtual machine hosts enable you to run your Compute virtual machine (VM) instances on dedicated servers
-    that are a single tenant and not shared with other customers.
-    For more information, see [Dedicated Virtual Machine Hosts](/iaas/Content/Compute/Concepts/dedicatedvmhosts.htm).
 
-    Args:
-        availability_domain(str):
-            The availability domain of the dedicated virtual machine host.
+        CreateDedicatedVmHost
+            Creates a new dedicated virtual machine host in the specified compartment and the specified availability domain.
+        Dedicated virtual machine hosts enable you to run your Compute virtual machine (VM) instances on dedicated servers
+        that are a single tenant and not shared with other customers.
+        For more information, see [Dedicated Virtual Machine Hosts](/iaas/Content/Compute/Concepts/dedicatedvmhosts.htm).
 
-Example: `Uocm:PHX-AD-1`
-.
+        Args:
+            availability_domain(str):
+                The availability domain of the dedicated virtual machine host.
 
-        compartment_id(str):
-            The OCID of the compartment.
+    Example: `Uocm:PHX-AD-1`
+    .
 
-        dedicated_vm_host_shape(str):
-            The dedicated virtual machine host shape. The shape determines the number of CPUs and
-other resources available for VM instances launched on the dedicated virtual machine host.
-.
+            compartment_id(str):
+                The OCID of the compartment.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            dedicated_vm_host_shape(str):
+                The dedicated virtual machine host shape. The shape determines the number of CPUs and
+    other resources available for VM instances launched on the dedicated virtual machine host.
+    .
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-        fault_domain(str, Optional):
-            The fault domain for the dedicated virtual machine host's assigned instances.
-For more information, see [Fault Domains](/iaas/Content/General/Concepts/regions.htm#fault).
-If you do not specify the fault domain, the system selects one for you. To change the fault domain for a dedicated virtual machine host,
-delete it and create a new dedicated virtual machine host in the preferred fault domain.
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-To get a list of fault domains, use the `ListFaultDomains` operation in
-the [Identity and Access Management Service API](/iaas/api/#/en/identity/20160918/).
+            fault_domain(str, Optional):
+                The fault domain for the dedicated virtual machine host's assigned instances.
+    For more information, see [Fault Domains](/iaas/Content/General/Concepts/regions.htm#fault).
+    If you do not specify the fault domain, the system selects one for you. To change the fault domain for a dedicated virtual machine host,
+    delete it and create a new dedicated virtual machine host in the preferred fault domain.
 
-Example: `FAULT-DOMAIN-1`
-. Defaults to None.
+    To get a list of fault domains, use the `ListFaultDomains` operation in
+    the [Identity and Access Management Service API](/iaas/api/#/en/identity/20160918/).
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+    Example: `FAULT-DOMAIN-1`
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-    Returns:
-        Dict[str, Any]
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'availability_domain': 'availabilityDomain', 'compartment_id': 'compartmentId', 'dedicated_vm_host_shape': 'dedicatedVmHostShape', 'defined_tags': 'definedTags', 'display_name': 'displayName', 'fault_domain': 'faultDomain', 'freeform_tags': 'freeformTags'}
+    payload = {
+        "availability_domain": "availabilityDomain",
+        "compartment_id": "compartmentId",
+        "dedicated_vm_host_shape": "dedicatedVmHostShape",
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "fault_domain": "faultDomain",
+        "freeform_tags": "freeformTags",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/dedicatedVmHosts".format(
-            **{}
-        ),
+        path="/dedicatedVmHosts".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-request-id": opc_request_id, "opc-retry-token": opc_retry_token},
@@ -3718,63 +3790,61 @@ Example: `{"Department": "Finance"}`
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'dedicated_vm_host_shape': 'dedicatedVmHostShape',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'fault_domain': 'faultDomain',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'lifecycle_state': 'lifecycleState',
-             'remaining_memory_in_g_bs': 'remainingMemoryInGBs',
-             'remaining_ocpus': 'remainingOcpus',
-             'time_created': 'timeCreated',
-             'total_memory_in_g_bs': 'totalMemoryInGBs',
-             'total_ocpus': 'totalOcpus'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "dedicated_vm_host_shape": "dedicatedVmHostShape",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "fault_domain": "faultDomain",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "lifecycle_state": "lifecycleState",
+            "remaining_memory_in_g_bs": "remainingMemoryInGBs",
+            "remaining_ocpus": "remainingOcpus",
+            "time_created": "timeCreated",
+            "total_memory_in_g_bs": "totalMemoryInGBs",
+            "total_ocpus": "totalOcpus",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def get_dedicated_vm_host(
-    hub,
-    ctx,
-    dedicated_vm_host_id: str,
-    opc_request_id: str = None
+    hub, ctx, dedicated_vm_host_id: str, opc_request_id: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    GetDedicatedVmHost
-        Gets information about the specified dedicated virtual machine host.
 
-    Args:
-        dedicated_vm_host_id(str):
-            The OCID of the dedicated VM host.
+        GetDedicatedVmHost
+            Gets information about the specified dedicated virtual machine host.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            dedicated_vm_host_id(str):
+                The OCID of the dedicated VM host.
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -3797,34 +3867,36 @@ If you need to contact Oracle about a particular request, please provide the req
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'dedicated_vm_host_shape': 'dedicatedVmHostShape',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'fault_domain': 'faultDomain',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'lifecycle_state': 'lifecycleState',
-             'remaining_memory_in_g_bs': 'remainingMemoryInGBs',
-             'remaining_ocpus': 'remainingOcpus',
-             'time_created': 'timeCreated',
-             'total_memory_in_g_bs': 'totalMemoryInGBs',
-             'total_ocpus': 'totalOcpus'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "dedicated_vm_host_shape": "dedicatedVmHostShape",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "fault_domain": "faultDomain",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "lifecycle_state": "lifecycleState",
+            "remaining_memory_in_g_bs": "remainingMemoryInGBs",
+            "remaining_ocpus": "remainingOcpus",
+            "time_created": "timeCreated",
+            "total_memory_in_g_bs": "totalMemoryInGBs",
+            "total_ocpus": "totalOcpus",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -3838,66 +3910,69 @@ async def update_dedicated_vm_host(
     opc_retry_token: str = None,
     defined_tags: Dict = None,
     display_name: str = None,
-    freeform_tags: Dict = None
+    freeform_tags: Dict = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    UpdateDedicatedVmHost
-        Updates the displayName, freeformTags, and definedTags attributes for the specified dedicated virtual machine host.
-    If an attribute value is not included, it will not be updated.
 
-    Args:
-        dedicated_vm_host_id(str):
-            The OCID of the dedicated VM host.
+        UpdateDedicatedVmHost
+            Updates the displayName, freeformTags, and definedTags attributes for the specified dedicated virtual machine host.
+        If an attribute value is not included, it will not be updated.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+        Args:
+            dedicated_vm_host_id(str):
+                The OCID of the dedicated VM host.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-    Returns:
-        Dict[str, Any]
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'defined_tags': 'definedTags', 'display_name': 'displayName', 'freeform_tags': 'freeformTags'}
+    payload = {
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "freeform_tags": "freeformTags",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -3907,7 +3982,11 @@ Example: `{"Department": "Finance"}`
         ),
         query_params={},
         data=payload,
-        headers={"if-match": if_match, "opc-request-id": opc_request_id, "opc-retry-token": opc_retry_token},
+        headers={
+            "if-match": if_match,
+            "opc-request-id": opc_request_id,
+            "opc-retry-token": opc_retry_token,
+        },
     )
 
     if not ret["result"]:
@@ -3915,66 +3994,64 @@ Example: `{"Department": "Finance"}`
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'dedicated_vm_host_shape': 'dedicatedVmHostShape',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'fault_domain': 'faultDomain',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'lifecycle_state': 'lifecycleState',
-             'remaining_memory_in_g_bs': 'remainingMemoryInGBs',
-             'remaining_ocpus': 'remainingOcpus',
-             'time_created': 'timeCreated',
-             'total_memory_in_g_bs': 'totalMemoryInGBs',
-             'total_ocpus': 'totalOcpus'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "dedicated_vm_host_shape": "dedicatedVmHostShape",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "fault_domain": "faultDomain",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "lifecycle_state": "lifecycleState",
+            "remaining_memory_in_g_bs": "remainingMemoryInGBs",
+            "remaining_ocpus": "remainingOcpus",
+            "time_created": "timeCreated",
+            "total_memory_in_g_bs": "totalMemoryInGBs",
+            "total_ocpus": "totalOcpus",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def delete_dedicated_vm_host(
-    hub,
-    ctx,
-    dedicated_vm_host_id: str,
-    opc_request_id: str = None
+    hub, ctx, dedicated_vm_host_id: str, opc_request_id: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    DeleteDedicatedVmHost
-        Deletes the specified dedicated virtual machine host.
 
-    If any VM instances are assigned to the dedicated virtual machine host,
-    the delete operation will fail and the service will return a 409 response code.
+        DeleteDedicatedVmHost
+            Deletes the specified dedicated virtual machine host.
 
-    Args:
-        dedicated_vm_host_id(str):
-            The OCID of the dedicated VM host.
+        If any VM instances are assigned to the dedicated virtual machine host,
+        the delete operation will fail and the service will return a 409 response code.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            dedicated_vm_host_id(str):
+                The OCID of the dedicated VM host.
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -3997,9 +4074,7 @@ If you need to contact Oracle about a particular request, please provide the req
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -4011,51 +4086,50 @@ async def change_dedicated_vm_host_compartment(
     compartment_id: str,
     if_match: str = None,
     opc_request_id: str = None,
-    opc_retry_token: str = None
+    opc_retry_token: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ChangeDedicatedVmHostCompartment
-        Moves a dedicated virtual machine host from one compartment to another.
 
-    Args:
-        dedicated_vm_host_id(str):
-            The OCID of the dedicated VM host.
+        ChangeDedicatedVmHostCompartment
+            Moves a dedicated virtual machine host from one compartment to another.
 
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment
-to move the dedicated virtual machine host to.
-.
+        Args:
+            dedicated_vm_host_id(str):
+                The OCID of the dedicated VM host.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment
+    to move the dedicated virtual machine host to.
+    .
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'compartment_id': 'compartmentId'}
+    payload = {"compartment_id": "compartmentId"}
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -4065,7 +4139,11 @@ may be rejected).
         ),
         query_params={},
         data=payload,
-        headers={"if-match": if_match, "opc-request-id": opc_request_id, "opc-retry-token": opc_retry_token},
+        headers={
+            "if-match": if_match,
+            "opc-request-id": opc_request_id,
+            "opc-retry-token": opc_retry_token,
+        },
     )
 
     if not ret["result"]:
@@ -4073,9 +4151,7 @@ may be rejected).
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -4090,66 +4166,65 @@ async def list_dedicated_vm_host_instances(
     page: str = None,
     opc_request_id: str = None,
     sort_by: str = None,
-    sort_order: str = None
+    sort_order: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListDedicatedVmHostInstances
-        Returns the list of instances on the dedicated virtual machine hosts that match the specified criteria.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        ListDedicatedVmHostInstances
+            Returns the list of instances on the dedicated virtual machine hosts that match the specified criteria.
 
-        dedicated_vm_host_id(str):
-            The OCID of the dedicated VM host.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+            dedicated_vm_host_id(str):
+                The OCID of the dedicated VM host.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -4162,7 +4237,14 @@ is case sensitive.
         path="/dedicatedVmHosts/{dedicatedVmHostId}/instances".format(
             **{"dedicatedVmHostId": dedicated_vm_host_id}
         ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "limit": limit, "page": page, "sortBy": sort_by, "sortOrder": sort_order},
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+        },
         data=payload,
         headers={"opc-request-id": opc_request_id},
     )
@@ -4172,9 +4254,7 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -4191,86 +4271,85 @@ async def list_images(
     page: str = None,
     sort_by: str = None,
     sort_order: str = None,
-    lifecycle_state: str = None
+    lifecycle_state: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListImages
-        Lists a subset of images available in the specified compartment, including
-    [platform images](/iaas/Content/Compute/References/images.htm) and
-    [custom images](/iaas/Content/Compute/Tasks/managingcustomimages.htm).
-    The list of platform images includes the three most recently published versions
-    of each major distribution. The list does not support filtering based on image tags.
 
-    The list of images returned is ordered to first show the recent platform images,
-    then all of the custom images.
+        ListImages
+            Lists a subset of images available in the specified compartment, including
+        [platform images](/iaas/Content/Compute/References/images.htm) and
+        [custom images](/iaas/Content/Compute/Tasks/managingcustomimages.htm).
+        The list of platform images includes the three most recently published versions
+        of each major distribution. The list does not support filtering based on image tags.
 
-    **Caution:** Platform images are refreshed regularly. When new images are released, older versions are replaced.
-    The image OCIDs remain available, but when the platform image is replaced, the image OCIDs are no longer returned as part of the platform image list.
+        The list of images returned is ordered to first show the recent platform images,
+        then all of the custom images.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        **Caution:** Platform images are refreshed regularly. When new images are released, older versions are replaced.
+        The image OCIDs remain available, but when the platform image is replaced, the image OCIDs are no longer returned as part of the platform image list.
 
-        display_name(str, Optional):
-            A filter to return only resources that match the given display name exactly.
-. Defaults to None.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-        operating_system(str, Optional):
-            The image's operating system.
+            display_name(str, Optional):
+                A filter to return only resources that match the given display name exactly.
+    . Defaults to None.
 
-Example: `Oracle Linux`
-. Defaults to None.
+            operating_system(str, Optional):
+                The image's operating system.
 
-        operating_system_version(str, Optional):
-            The image's operating system version.
+    Example: `Oracle Linux`
+    . Defaults to None.
 
-Example: `7.2`
-. Defaults to None.
+            operating_system_version(str, Optional):
+                The image's operating system version.
 
-        shape(str, Optional):
-            Shape name. Defaults to None.
+    Example: `7.2`
+    . Defaults to None.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            shape(str, Optional):
+                Shape name. Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-        lifecycle_state(str, Optional):
-            A filter to only return resources that match the given lifecycle state. The state
-value is case-insensitive.
-. Defaults to None.
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            lifecycle_state(str, Optional):
+                A filter to only return resources that match the given lifecycle state. The state
+    value is case-insensitive.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -4280,10 +4359,19 @@ value is case-insensitive.
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/images".format(
-            **{}
-        ),
-        query_params={"compartmentId": compartment_id, "displayName": display_name, "operatingSystem": operating_system, "operatingSystemVersion": operating_system_version, "shape": shape, "limit": limit, "page": page, "sortBy": sort_by, "sortOrder": sort_order, "lifecycleState": lifecycle_state},
+        path="/images".format(**{}),
+        query_params={
+            "compartmentId": compartment_id,
+            "displayName": display_name,
+            "operatingSystem": operating_system,
+            "operatingSystemVersion": operating_system_version,
+            "shape": shape,
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+            "lifecycleState": lifecycle_state,
+        },
         data=payload,
         headers={},
     )
@@ -4293,9 +4381,7 @@ value is case-insensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -4311,184 +4397,190 @@ async def create_image(
     image_source_details: make_dataclass(
         "image_source_details",
         [
-            ("source_type", str), 
-            ("operating_system", str, field(default=None)), 
-            ("operating_system_version", str, field(default=None)), 
-            ("source_image_type", str, field(default=None))
-        ]
-        ) = None,
+            ("source_type", str),
+            ("operating_system", str, field(default=None)),
+            ("operating_system_version", str, field(default=None)),
+            ("source_image_type", str, field(default=None)),
+        ],
+    ) = None,
     instance_id: str = None,
     launch_mode: str = None,
     launch_options: make_dataclass(
         "launch_options",
         [
-            ("boot_volume_type", str, field(default=None)), 
-            ("firmware", str, field(default=None)), 
-            ("is_consistent_volume_naming_enabled", bool, field(default=None)), 
-            ("is_pv_encryption_in_transit_enabled", bool, field(default=None)), 
-            ("network_type", str, field(default=None)), 
-            ("remote_data_volume_type", str, field(default=None))
-        ]
-        ) = None
+            ("boot_volume_type", str, field(default=None)),
+            ("firmware", str, field(default=None)),
+            ("is_consistent_volume_naming_enabled", bool, field(default=None)),
+            ("is_pv_encryption_in_transit_enabled", bool, field(default=None)),
+            ("network_type", str, field(default=None)),
+            ("remote_data_volume_type", str, field(default=None)),
+        ],
+    ) = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    CreateImage
-        Creates a boot disk image for the specified instance or imports an exported image from the Oracle Cloud Infrastructure Object Storage service.
 
-    When creating a new image, you must provide the OCID of the instance you want to use as the basis for the image, and
-    the OCID of the compartment containing that instance. For more information about images,
-    see [Managing Custom Images](/iaas/Content/Compute/Tasks/managingcustomimages.htm).
+        CreateImage
+            Creates a boot disk image for the specified instance or imports an exported image from the Oracle Cloud Infrastructure Object Storage service.
 
-    When importing an exported image from Object Storage, you specify the source information
-    in [ImageSourceDetails](#/en/iaas/latest/requests/ImageSourceDetails).
+        When creating a new image, you must provide the OCID of the instance you want to use as the basis for the image, and
+        the OCID of the compartment containing that instance. For more information about images,
+        see [Managing Custom Images](/iaas/Content/Compute/Tasks/managingcustomimages.htm).
 
-    When importing an image based on the namespace, bucket name, and object name,
-    use [ImageSourceViaObjectStorageTupleDetails](#/en/iaas/latest/requests/ImageSourceViaObjectStorageTupleDetails).
+        When importing an exported image from Object Storage, you specify the source information
+        in [ImageSourceDetails](#/en/iaas/latest/requests/ImageSourceDetails).
 
-    When importing an image based on the Object Storage URL, use
-    [ImageSourceViaObjectStorageUriDetails](#/en/iaas/latest/requests/ImageSourceViaObjectStorageUriDetails).
-    See [Object Storage URLs](/iaas/Content/Compute/Tasks/imageimportexport.htm#URLs) and [Using Pre-Authenticated Requests](/iaas/Content/Object/Tasks/usingpreauthenticatedrequests.htm)
-    for constructing URLs for image import/export.
+        When importing an image based on the namespace, bucket name, and object name,
+        use [ImageSourceViaObjectStorageTupleDetails](#/en/iaas/latest/requests/ImageSourceViaObjectStorageTupleDetails).
 
-    For more information about importing exported images, see
-    [Image Import/Export](/iaas/Content/Compute/Tasks/imageimportexport.htm).
+        When importing an image based on the Object Storage URL, use
+        [ImageSourceViaObjectStorageUriDetails](#/en/iaas/latest/requests/ImageSourceViaObjectStorageUriDetails).
+        See [Object Storage URLs](/iaas/Content/Compute/Tasks/imageimportexport.htm#URLs) and [Using Pre-Authenticated Requests](/iaas/Content/Object/Tasks/usingpreauthenticatedrequests.htm)
+        for constructing URLs for image import/export.
 
-    You may optionally specify a *display name* for the image, which is simply a friendly name or description.
-    It does not have to be unique, and you can change it. See [UpdateImage](#/en/iaas/latest/Image/UpdateImage).
+        For more information about importing exported images, see
+        [Image Import/Export](/iaas/Content/Compute/Tasks/imageimportexport.htm).
+
+        You may optionally specify a *display name* for the image, which is simply a friendly name or description.
+        It does not have to be unique, and you can change it. See [UpdateImage](#/en/iaas/latest/Image/UpdateImage).
+        Avoid entering confidential information.
+
+        Args:
+            compartment_id(str):
+                The OCID of the compartment you want the image to be created in.
+
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
+
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
+
+            display_name(str, Optional):
+                A user-friendly name for the image. It does not have to be unique, and it's changeable.
     Avoid entering confidential information.
 
-    Args:
-        compartment_id(str):
-            The OCID of the compartment you want the image to be created in.
+    You cannot use a platform image name as a custom image name.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+    Example: `My Oracle Linux image`
+    . Defaults to None.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
 
-        display_name(str, Optional):
-            A user-friendly name for the image. It does not have to be unique, and it's changeable.
-Avoid entering confidential information.
+            image_source_details(dict[str, Any], Optional):
+                imageSourceDetails. Defaults to None.
 
-You cannot use a platform image name as a custom image name.
+                * operating_system (str, Optional):
+                    operatingSystem
 
-Example: `My Oracle Linux image`
-. Defaults to None.
+                * operating_system_version (str, Optional):
+                    operatingSystemVersion
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
-
-Example: `{"Department": "Finance"}`
-. Defaults to None.
-
-        image_source_details(dict[str, Any], Optional):
-            imageSourceDetails. Defaults to None.
-
-            * operating_system (str, Optional):
-                operatingSystem
-
-            * operating_system_version (str, Optional):
-                operatingSystemVersion
-
-            * source_image_type (str, Optional):
-                The format of the image to be imported. Only monolithic
-images are supported. This attribute is not used for exported Oracle images with the OCI image format.
+                * source_image_type (str, Optional):
+                    The format of the image to be imported. Only monolithic
+    images are supported. This attribute is not used for exported Oracle images with the OCI image format.
 
 
-            * source_type (str):
-                The source type for the image. Use `objectStorageTuple` when specifying the namespace,
-bucket name, and object name. Use `objectStorageUri` when specifying the Object Storage URL.
+                * source_type (str):
+                    The source type for the image. Use `objectStorageTuple` when specifying the namespace,
+    bucket name, and object name. Use `objectStorageUri` when specifying the Object Storage URL.
 
 
-        instance_id(str, Optional):
-            The OCID of the instance you want to use as the basis for the image.
-. Defaults to None.
+            instance_id(str, Optional):
+                The OCID of the instance you want to use as the basis for the image.
+    . Defaults to None.
 
-        launch_mode(str, Optional):
-            Specifies the configuration mode for launching virtual machine (VM) instances. The configuration modes are:
-* `NATIVE` - VM instances launch with paravirtualized boot and VFIO devices. The default value for platform images.
-* `EMULATED` - VM instances launch with emulated devices, such as the E1000 network driver and emulated SCSI disk controller.
-* `PARAVIRTUALIZED` - VM instances launch with paravirtualized devices using VirtIO drivers.
-* `CUSTOM` - VM instances launch with custom configuration settings specified in the `LaunchOptions` parameter.
-. Defaults to None.
+            launch_mode(str, Optional):
+                Specifies the configuration mode for launching virtual machine (VM) instances. The configuration modes are:
+    * `NATIVE` - VM instances launch with paravirtualized boot and VFIO devices. The default value for platform images.
+    * `EMULATED` - VM instances launch with emulated devices, such as the E1000 network driver and emulated SCSI disk controller.
+    * `PARAVIRTUALIZED` - VM instances launch with paravirtualized devices using VirtIO drivers.
+    * `CUSTOM` - VM instances launch with custom configuration settings specified in the `LaunchOptions` parameter.
+    . Defaults to None.
 
-        launch_options(dict[str, Any], Optional):
-            launchOptions. Defaults to None.
+            launch_options(dict[str, Any], Optional):
+                launchOptions. Defaults to None.
 
-            * boot_volume_type (str, Optional):
-                Emulation type for the boot volume.
-* `ISCSI` - ISCSI attached block storage device.
-* `SCSI` - Emulated SCSI disk.
-* `IDE` - Emulated IDE disk.
-* `VFIO` - Direct attached Virtual Function storage. This is the default option for local data
-volumes on platform images.
-* `PARAVIRTUALIZED` - Paravirtualized disk. This is the default for boot volumes and remote block
-storage volumes on platform images.
-
-
-            * firmware (str, Optional):
-                Firmware used to boot VM. Select the option that matches your operating system.
-* `BIOS` - Boot VM using BIOS style firmware. This is compatible with both 32 bit and 64 bit operating
-systems that boot using MBR style bootloaders.
-* `UEFI_64` - Boot VM using UEFI style firmware compatible with 64 bit operating systems. This is the
-default for platform images.
+                * boot_volume_type (str, Optional):
+                    Emulation type for the boot volume.
+    * `ISCSI` - ISCSI attached block storage device.
+    * `SCSI` - Emulated SCSI disk.
+    * `IDE` - Emulated IDE disk.
+    * `VFIO` - Direct attached Virtual Function storage. This is the default option for local data
+    volumes on platform images.
+    * `PARAVIRTUALIZED` - Paravirtualized disk. This is the default for boot volumes and remote block
+    storage volumes on platform images.
 
 
-            * is_consistent_volume_naming_enabled (bool, Optional):
-                Whether to enable consistent volume naming feature. Defaults to false.
-
-            * is_pv_encryption_in_transit_enabled (bool, Optional):
-                Deprecated. Instead use `isPvEncryptionInTransitEnabled` in
-[LaunchInstanceDetails](#/en/iaas/latest/datatypes/LaunchInstanceDetails).
-
-
-            * network_type (str, Optional):
-                Emulation type for the physical network interface card (NIC).
-* `E1000` - Emulated Gigabit ethernet controller. Compatible with Linux e1000 network driver.
-* `VFIO` - Direct attached Virtual Function network controller. This is the networking type
-when you launch an instance using hardware-assisted (SR-IOV) networking.
-* `PARAVIRTUALIZED` - VM instances launch with paravirtualized devices using VirtIO drivers.
+                * firmware (str, Optional):
+                    Firmware used to boot VM. Select the option that matches your operating system.
+    * `BIOS` - Boot VM using BIOS style firmware. This is compatible with both 32 bit and 64 bit operating
+    systems that boot using MBR style bootloaders.
+    * `UEFI_64` - Boot VM using UEFI style firmware compatible with 64 bit operating systems. This is the
+    default for platform images.
 
 
-            * remote_data_volume_type (str, Optional):
-                Emulation type for volume.
-* `ISCSI` - ISCSI attached block storage device.
-* `SCSI` - Emulated SCSI disk.
-* `IDE` - Emulated IDE disk.
-* `VFIO` - Direct attached Virtual Function storage. This is the default option for local data
-volumes on platform images.
-* `PARAVIRTUALIZED` - Paravirtualized disk. This is the default for boot volumes and remote block
-storage volumes on platform images.
+                * is_consistent_volume_naming_enabled (bool, Optional):
+                    Whether to enable consistent volume naming feature. Defaults to false.
 
-    Returns:
-        Dict[str, Any]
+                * is_pv_encryption_in_transit_enabled (bool, Optional):
+                    Deprecated. Instead use `isPvEncryptionInTransitEnabled` in
+    [LaunchInstanceDetails](#/en/iaas/latest/datatypes/LaunchInstanceDetails).
+
+
+                * network_type (str, Optional):
+                    Emulation type for the physical network interface card (NIC).
+    * `E1000` - Emulated Gigabit ethernet controller. Compatible with Linux e1000 network driver.
+    * `VFIO` - Direct attached Virtual Function network controller. This is the networking type
+    when you launch an instance using hardware-assisted (SR-IOV) networking.
+    * `PARAVIRTUALIZED` - VM instances launch with paravirtualized devices using VirtIO drivers.
+
+
+                * remote_data_volume_type (str, Optional):
+                    Emulation type for volume.
+    * `ISCSI` - ISCSI attached block storage device.
+    * `SCSI` - Emulated SCSI disk.
+    * `IDE` - Emulated IDE disk.
+    * `VFIO` - Direct attached Virtual Function storage. This is the default option for local data
+    volumes on platform images.
+    * `PARAVIRTUALIZED` - Paravirtualized disk. This is the default for boot volumes and remote block
+    storage volumes on platform images.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'compartment_id': 'compartmentId', 'defined_tags': 'definedTags', 'display_name': 'displayName', 'freeform_tags': 'freeformTags', 'image_source_details': 'imageSourceDetails', 'instance_id': 'instanceId', 'launch_mode': 'launchMode', 'launch_options': 'launchOptions'}
+    payload = {
+        "compartment_id": "compartmentId",
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "freeform_tags": "freeformTags",
+        "image_source_details": "imageSourceDetails",
+        "instance_id": "instanceId",
+        "launch_mode": "launchMode",
+        "launch_options": "launchOptions",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/images".format(
-            **{}
-        ),
+        path="/images".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-retry-token": opc_retry_token},
@@ -4499,47 +4591,45 @@ storage volumes on platform images.
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'agent_features': 'agentFeatures',
-             'base_image_id': 'baseImageId',
-             'billable_size_in_g_bs': 'billableSizeInGBs',
-             'compartment_id': 'compartmentId',
-             'create_image_allowed': 'createImageAllowed',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'launch_mode': 'launchMode',
-             'launch_options': 'launchOptions',
-             'lifecycle_state': 'lifecycleState',
-             'operating_system': 'operatingSystem',
-             'operating_system_version': 'operatingSystemVersion',
-             'size_in_m_bs': 'sizeInMBs',
-             'time_created': 'timeCreated'}
+        {
+            "agent_features": "agentFeatures",
+            "base_image_id": "baseImageId",
+            "billable_size_in_g_bs": "billableSizeInGBs",
+            "compartment_id": "compartmentId",
+            "create_image_allowed": "createImageAllowed",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "launch_mode": "launchMode",
+            "launch_options": "launchOptions",
+            "lifecycle_state": "lifecycleState",
+            "operating_system": "operatingSystem",
+            "operating_system_version": "operatingSystemVersion",
+            "size_in_m_bs": "sizeInMBs",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
-async def get_image(
-    hub,
-    ctx,
-    image_id: str
-) -> Dict[str, Any]:
+async def get_image(hub, ctx, image_id: str) -> Dict[str, Any]:
     r"""
-    
+
     GetImage
         Gets the specified image.
 
@@ -4552,7 +4642,6 @@ async def get_image(
 
     """
 
-
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
@@ -4561,9 +4650,7 @@ async def get_image(
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/images/{imageId}".format(
-            **{"imageId": image_id}
-        ),
+        path="/images/{imageId}".format(**{"imageId": image_id}),
         query_params={},
         data=payload,
         headers={},
@@ -4574,36 +4661,38 @@ async def get_image(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'agent_features': 'agentFeatures',
-             'base_image_id': 'baseImageId',
-             'billable_size_in_g_bs': 'billableSizeInGBs',
-             'compartment_id': 'compartmentId',
-             'create_image_allowed': 'createImageAllowed',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'launch_mode': 'launchMode',
-             'launch_options': 'launchOptions',
-             'lifecycle_state': 'lifecycleState',
-             'operating_system': 'operatingSystem',
-             'operating_system_version': 'operatingSystemVersion',
-             'size_in_m_bs': 'sizeInMBs',
-             'time_created': 'timeCreated'}
+        {
+            "agent_features": "agentFeatures",
+            "base_image_id": "baseImageId",
+            "billable_size_in_g_bs": "billableSizeInGBs",
+            "compartment_id": "compartmentId",
+            "create_image_allowed": "createImageAllowed",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "launch_mode": "launchMode",
+            "launch_options": "launchOptions",
+            "lifecycle_state": "lifecycleState",
+            "operating_system": "operatingSystem",
+            "operating_system_version": "operatingSystemVersion",
+            "size_in_m_bs": "sizeInMBs",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -4618,79 +4707,82 @@ async def update_image(
     display_name: str = None,
     freeform_tags: Dict = None,
     operating_system: str = None,
-    operating_system_version: str = None
+    operating_system_version: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    UpdateImage
-        Updates the display name of the image. Avoid entering confidential information.
 
-    Args:
-        image_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
+        UpdateImage
+            Updates the display name of the image. Avoid entering confidential information.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+        Args:
+            image_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        operating_system(str, Optional):
-            Operating system
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
 
-Example: `Oracle Linux`
-. Defaults to None.
+            operating_system(str, Optional):
+                Operating system
 
-        operating_system_version(str, Optional):
-            Operating system version
+    Example: `Oracle Linux`
+    . Defaults to None.
 
-Example: `7.4`
-. Defaults to None.
+            operating_system_version(str, Optional):
+                Operating system version
 
-    Returns:
-        Dict[str, Any]
+    Example: `7.4`
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'defined_tags': 'definedTags', 'display_name': 'displayName', 'freeform_tags': 'freeformTags', 'operating_system': 'operatingSystem', 'operating_system_version': 'operatingSystemVersion'}
+    payload = {
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "freeform_tags": "freeformTags",
+        "operating_system": "operatingSystem",
+        "operating_system_version": "operatingSystemVersion",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="put",
-        path="/images/{imageId}".format(
-            **{"imageId": image_id}
-        ),
+        path="/images/{imageId}".format(**{"imageId": image_id}),
         query_params={},
         data=payload,
         headers={"opc-retry-token": opc_retry_token, "if-match": if_match},
@@ -4701,66 +4793,62 @@ Example: `7.4`
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'agent_features': 'agentFeatures',
-             'base_image_id': 'baseImageId',
-             'billable_size_in_g_bs': 'billableSizeInGBs',
-             'compartment_id': 'compartmentId',
-             'create_image_allowed': 'createImageAllowed',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'launch_mode': 'launchMode',
-             'launch_options': 'launchOptions',
-             'lifecycle_state': 'lifecycleState',
-             'operating_system': 'operatingSystem',
-             'operating_system_version': 'operatingSystemVersion',
-             'size_in_m_bs': 'sizeInMBs',
-             'time_created': 'timeCreated'}
+        {
+            "agent_features": "agentFeatures",
+            "base_image_id": "baseImageId",
+            "billable_size_in_g_bs": "billableSizeInGBs",
+            "compartment_id": "compartmentId",
+            "create_image_allowed": "createImageAllowed",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "launch_mode": "launchMode",
+            "launch_options": "launchOptions",
+            "lifecycle_state": "lifecycleState",
+            "operating_system": "operatingSystem",
+            "operating_system_version": "operatingSystemVersion",
+            "size_in_m_bs": "sizeInMBs",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
-async def delete_image(
-    hub,
-    ctx,
-    image_id: str,
-    if_match: str = None
-) -> Dict[str, Any]:
+async def delete_image(hub, ctx, image_id: str, if_match: str = None) -> Dict[str, Any]:
     r"""
-    
-    DeleteImage
-        Deletes an image.
 
-    Args:
-        image_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
+        DeleteImage
+            Deletes an image.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+        Args:
+            image_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
 
-    Returns:
-        Dict[str, Any]
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -4770,9 +4858,7 @@ will be updated or deleted only if the etag you provide matches the resource's c
     ret = await hub.tool.oci.session.request(
         ctx,
         method="delete",
-        path="/images/{imageId}".format(
-            **{"imageId": image_id}
-        ),
+        path="/images/{imageId}".format(**{"imageId": image_id}),
         query_params={},
         data=payload,
         headers={"if-match": if_match},
@@ -4783,9 +4869,7 @@ will be updated or deleted only if the etag you provide matches the resource's c
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -4797,52 +4881,51 @@ async def change_image_compartment(
     compartment_id: str,
     if_match: str = None,
     opc_request_id: str = None,
-    opc_retry_token: str = None
+    opc_retry_token: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ChangeImageCompartment
-        Moves an image into a different compartment within the same tenancy. For information about moving
-    resources between compartments, see
-    [Moving Resources to a Different Compartment](/iaas/Content/Identity/Tasks/managingcompartments.htm#moveRes).
 
-    Args:
-        image_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
+        ChangeImageCompartment
+            Moves an image into a different compartment within the same tenancy. For information about moving
+        resources between compartments, see
+        [Moving Resources to a Different Compartment](/iaas/Content/Identity/Tasks/managingcompartments.htm#moveRes).
 
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment to move the image to.
-.
+        Args:
+            image_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment to move the image to.
+    .
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'compartment_id': 'compartmentId'}
+    payload = {"compartment_id": "compartmentId"}
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -4852,7 +4935,11 @@ may be rejected).
         ),
         query_params={},
         data=payload,
-        headers={"if-match": if_match, "opc-request-id": opc_request_id, "opc-retry-token": opc_retry_token},
+        headers={
+            "if-match": if_match,
+            "opc-request-id": opc_request_id,
+            "opc-retry-token": opc_retry_token,
+        },
     )
 
     if not ret["result"]:
@@ -4860,9 +4947,7 @@ may be rejected).
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -4874,75 +4959,72 @@ async def export_image(
     destination_type: str,
     opc_retry_token: str = None,
     if_match: str = None,
-    export_format: str = None
+    export_format: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ExportImage
-        Exports the specified image to the Oracle Cloud Infrastructure Object Storage service. You can use the Object Storage URL,
-    or the namespace, bucket name, and object name when specifying the location to export to.
 
-    For more information about exporting images, see [Image Import/Export](/iaas/Content/Compute/Tasks/imageimportexport.htm).
+        ExportImage
+            Exports the specified image to the Oracle Cloud Infrastructure Object Storage service. You can use the Object Storage URL,
+        or the namespace, bucket name, and object name when specifying the location to export to.
 
-    To perform an image export, you need write access to the Object Storage bucket for the image,
-    see [Let Users Write Objects to Object Storage Buckets](/iaas/Content/Identity/Concepts/commonpolicies.htm#Let4).
+        For more information about exporting images, see [Image Import/Export](/iaas/Content/Compute/Tasks/imageimportexport.htm).
 
-    See [Object Storage URLs](/iaas/Content/Compute/Tasks/imageimportexport.htm#URLs) and [Using Pre-Authenticated Requests](/iaas/Content/Object/Tasks/usingpreauthenticatedrequests.htm)
-    for constructing URLs for image import/export.
+        To perform an image export, you need write access to the Object Storage bucket for the image,
+        see [Let Users Write Objects to Object Storage Buckets](/iaas/Content/Identity/Concepts/commonpolicies.htm#Let4).
 
-    Args:
-        image_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
+        See [Object Storage URLs](/iaas/Content/Compute/Tasks/imageimportexport.htm#URLs) and [Using Pre-Authenticated Requests](/iaas/Content/Object/Tasks/usingpreauthenticatedrequests.htm)
+        for constructing URLs for image import/export.
 
-        destination_type(str):
-            The destination type. Use `objectStorageTuple` when specifying the namespace, bucket name, and object name.
-Use `objectStorageUri` when specifying the Object Storage URL.
-.
+        Args:
+            image_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            destination_type(str):
+                The destination type. Use `objectStorageTuple` when specifying the namespace, bucket name, and object name.
+    Use `objectStorageUri` when specifying the Object Storage URL.
+    .
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-        export_format(str, Optional):
-            The format to export the image to. The default value is `OCI`.
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-The following image formats are available:
+            export_format(str, Optional):
+                The format to export the image to. The default value is `OCI`.
 
-- `OCI` - Oracle Cloud Infrastructure file with a QCOW2 image and Oracle Cloud Infrastructure metadata (.oci).
-Use this format to export a custom image that you want to import into other tenancies or regions.
-- `QCOW2` - QEMU Copy On Write (.qcow2)
-- `VDI` - Virtual Disk Image (.vdi) for Oracle VM VirtualBox
-- `VHD` - Virtual Hard Disk (.vhd) for Hyper-V
-- `VMDK` - Virtual Machine Disk (.vmdk)
-. Defaults to None.
+    The following image formats are available:
 
-    Returns:
-        Dict[str, Any]
+    - `OCI` - Oracle Cloud Infrastructure file with a QCOW2 image and Oracle Cloud Infrastructure metadata (.oci).
+    Use this format to export a custom image that you want to import into other tenancies or regions.
+    - `QCOW2` - QEMU Copy On Write (.qcow2)
+    - `VDI` - Virtual Disk Image (.vdi) for Oracle VM VirtualBox
+    - `VHD` - Virtual Hard Disk (.vhd) for Hyper-V
+    - `VMDK` - Virtual Machine Disk (.vmdk)
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'destination_type': 'destinationType', 'export_format': 'exportFormat'}
+    payload = {"destination_type": "destinationType", "export_format": "exportFormat"}
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/images/{imageId}/actions/export".format(
-            **{"imageId": image_id}
-        ),
+        path="/images/{imageId}/actions/export".format(**{"imageId": image_id}),
         query_params={},
         data=payload,
         headers={"opc-retry-token": opc_retry_token, "if-match": if_match},
@@ -4953,36 +5035,38 @@ Use this format to export a custom image that you want to import into other tena
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'agent_features': 'agentFeatures',
-             'base_image_id': 'baseImageId',
-             'billable_size_in_g_bs': 'billableSizeInGBs',
-             'compartment_id': 'compartmentId',
-             'create_image_allowed': 'createImageAllowed',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'launch_mode': 'launchMode',
-             'launch_options': 'launchOptions',
-             'lifecycle_state': 'lifecycleState',
-             'operating_system': 'operatingSystem',
-             'operating_system_version': 'operatingSystemVersion',
-             'size_in_m_bs': 'sizeInMBs',
-             'time_created': 'timeCreated'}
+        {
+            "agent_features": "agentFeatures",
+            "base_image_id": "baseImageId",
+            "billable_size_in_g_bs": "billableSizeInGBs",
+            "compartment_id": "compartmentId",
+            "create_image_allowed": "createImageAllowed",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "launch_mode": "launchMode",
+            "launch_options": "launchOptions",
+            "lifecycle_state": "lifecycleState",
+            "operating_system": "operatingSystem",
+            "operating_system_version": "operatingSystemVersion",
+            "size_in_m_bs": "sizeInMBs",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -4993,41 +5077,40 @@ async def list_image_shape_compatibility_entries(
     image_id: str,
     limit: int = None,
     page: str = None,
-    opc_request_id: str = None
+    opc_request_id: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListImageShapeCompatibilityEntries
-        Lists the compatible shapes for the specified image.
 
-    Args:
-        image_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
+        ListImageShapeCompatibilityEntries
+            Lists the compatible shapes for the specified image.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+        Args:
+            image_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -5037,9 +5120,7 @@ If you need to contact Oracle about a particular request, please provide the req
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/images/{imageId}/shapes".format(
-            **{"imageId": image_id}
-        ),
+        path="/images/{imageId}/shapes".format(**{"imageId": image_id}),
         query_params={"limit": limit, "page": page},
         data=payload,
         headers={"opc-request-id": opc_request_id},
@@ -5050,42 +5131,35 @@ If you need to contact Oracle about a particular request, please provide the req
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
 
 async def get_image_shape_compatibility_entry(
-    hub,
-    ctx,
-    image_id: str,
-    shape_name: str,
-    opc_request_id: str = None
+    hub, ctx, image_id: str, shape_name: str, opc_request_id: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    GetImageShapeCompatibilityEntry
-        Retrieves an image shape compatibility entry.
 
-    Args:
-        image_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
+        GetImageShapeCompatibilityEntry
+            Retrieves an image shape compatibility entry.
 
-        shape_name(str):
-            Shape name.
+        Args:
+            image_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the image.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            shape_name(str):
+                Shape name.
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -5108,24 +5182,26 @@ If you need to contact Oracle about a particular request, please provide the req
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'image_id': 'imageId',
-             'memory_constraints': 'memoryConstraints',
-             'ocpu_constraints': 'ocpuConstraints',
-             'shape': 'shape'}
+        {
+            "image_id": "imageId",
+            "memory_constraints": "memoryConstraints",
+            "ocpu_constraints": "ocpuConstraints",
+            "shape": "shape",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -5138,20 +5214,17 @@ async def add_image_shape_compatibility_entry(
     memory_constraints: make_dataclass(
         "memory_constraints",
         [
-            ("max_in_g_bs", int, field(default=None)), 
-            ("min_in_g_bs", int, field(default=None))
-        ]
-        ) = None,
+            ("max_in_g_bs", int, field(default=None)),
+            ("min_in_g_bs", int, field(default=None)),
+        ],
+    ) = None,
     ocpu_constraints: make_dataclass(
         "ocpu_constraints",
-        [
-            ("max", int, field(default=None)), 
-            ("min", int, field(default=None))
-        ]
-        ) = None
+        [("max", int, field(default=None)), ("min", int, field(default=None))],
+    ) = None,
 ) -> Dict[str, Any]:
     r"""
-    
+
     AddImageShapeCompatibilityEntry
         Adds a shape to the compatible shapes list for the image.
 
@@ -5185,11 +5258,13 @@ async def add_image_shape_compatibility_entry(
 
     """
 
-
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'memory_constraints': 'memoryConstraints', 'ocpu_constraints': 'ocpuConstraints'}
+    payload = {
+        "memory_constraints": "memoryConstraints",
+        "ocpu_constraints": "ocpuConstraints",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -5207,36 +5282,35 @@ async def add_image_shape_compatibility_entry(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'image_id': 'imageId',
-             'memory_constraints': 'memoryConstraints',
-             'ocpu_constraints': 'ocpuConstraints',
-             'shape': 'shape'}
+        {
+            "image_id": "imageId",
+            "memory_constraints": "memoryConstraints",
+            "ocpu_constraints": "ocpuConstraints",
+            "shape": "shape",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def remove_image_shape_compatibility_entry(
-    hub,
-    ctx,
-    image_id: str,
-    shape_name: str
+    hub, ctx, image_id: str, shape_name: str
 ) -> Dict[str, Any]:
     r"""
-    
+
     RemoveImageShapeCompatibilityEntry
         Removes a shape from the compatible shapes list for the image.
 
@@ -5251,7 +5325,6 @@ async def remove_image_shape_compatibility_entry(
         Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -5274,9 +5347,7 @@ async def remove_image_shape_compatibility_entry(
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -5287,41 +5358,40 @@ async def list_instance_console_connections(
     compartment_id: str,
     instance_id: str = None,
     limit: int = None,
-    page: str = None
+    page: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListInstanceConsoleConnections
-        Lists the console connections for the specified compartment or instance.
 
-    For more information about instance console connections, see [Troubleshooting Instances Using Instance Console Connections](/iaas/Content/Compute/References/serialconsole.htm).
+        ListInstanceConsoleConnections
+            Lists the console connections for the specified compartment or instance.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        For more information about instance console connections, see [Troubleshooting Instances Using Instance Console Connections](/iaas/Content/Compute/References/serialconsole.htm).
 
-        instance_id(str, Optional):
-            The OCID of the instance. Defaults to None.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            instance_id(str, Optional):
+                The OCID of the instance. Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -5331,10 +5401,13 @@ call. For important details about how pagination works, see
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/instanceConsoleConnections".format(
-            **{}
-        ),
-        query_params={"compartmentId": compartment_id, "instanceId": instance_id, "limit": limit, "page": page},
+        path="/instanceConsoleConnections".format(**{}),
+        query_params={
+            "compartmentId": compartment_id,
+            "instanceId": instance_id,
+            "limit": limit,
+            "page": page,
+        },
         data=payload,
         headers={},
     )
@@ -5344,9 +5417,7 @@ call. For important details about how pagination works, see
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -5358,63 +5429,65 @@ async def create_instance_console_connection(
     public_key: str,
     opc_retry_token: str = None,
     defined_tags: Dict = None,
-    freeform_tags: Dict = None
+    freeform_tags: Dict = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    CreateInstanceConsoleConnection
-        Creates a new console connection to the specified instance.
-    After the console connection has been created and is available,
-    you connect to the console using SSH.
 
-    For more information about instance console connections, see [Troubleshooting Instances Using Instance Console Connections](/iaas/Content/Compute/References/serialconsole.htm).
+        CreateInstanceConsoleConnection
+            Creates a new console connection to the specified instance.
+        After the console connection has been created and is available,
+        you connect to the console using SSH.
 
-    Args:
-        instance_id(str):
-            The OCID of the instance to create the console connection to.
+        For more information about instance console connections, see [Troubleshooting Instances Using Instance Console Connections](/iaas/Content/Compute/References/serialconsole.htm).
 
-        public_key(str):
-            The SSH public key used to authenticate the console connection.
+        Args:
+            instance_id(str):
+                The OCID of the instance to create the console connection to.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            public_key(str):
+                The SSH public key used to authenticate the console connection.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-    Returns:
-        Dict[str, Any]
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'defined_tags': 'definedTags', 'freeform_tags': 'freeformTags', 'instance_id': 'instanceId', 'public_key': 'publicKey'}
+    payload = {
+        "defined_tags": "definedTags",
+        "freeform_tags": "freeformTags",
+        "instance_id": "instanceId",
+        "public_key": "publicKey",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/instanceConsoleConnections".format(
-            **{}
-        ),
+        path="/instanceConsoleConnections".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-retry-token": opc_retry_token},
@@ -5425,41 +5498,41 @@ Example: `{"Department": "Finance"}`
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'compartment_id': 'compartmentId',
-             'connection_string': 'connectionString',
-             'defined_tags': 'definedTags',
-             'fingerprint': 'fingerprint',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'lifecycle_state': 'lifecycleState',
-             'service_host_key_fingerprint': 'serviceHostKeyFingerprint',
-             'vnc_connection_string': 'vncConnectionString'}
+        {
+            "compartment_id": "compartmentId",
+            "connection_string": "connectionString",
+            "defined_tags": "definedTags",
+            "fingerprint": "fingerprint",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "instance_id": "instanceId",
+            "lifecycle_state": "lifecycleState",
+            "service_host_key_fingerprint": "serviceHostKeyFingerprint",
+            "vnc_connection_string": "vncConnectionString",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def get_instance_console_connection(
-    hub,
-    ctx,
-    instance_console_connection_id: str
+    hub, ctx, instance_console_connection_id: str
 ) -> Dict[str, Any]:
     r"""
-    
+
     GetInstanceConsoleConnection
         Gets the specified instance console connection's information.
 
@@ -5471,7 +5544,6 @@ async def get_instance_console_connection(
         Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -5494,30 +5566,32 @@ async def get_instance_console_connection(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'compartment_id': 'compartmentId',
-             'connection_string': 'connectionString',
-             'defined_tags': 'definedTags',
-             'fingerprint': 'fingerprint',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'lifecycle_state': 'lifecycleState',
-             'service_host_key_fingerprint': 'serviceHostKeyFingerprint',
-             'vnc_connection_string': 'vncConnectionString'}
+        {
+            "compartment_id": "compartmentId",
+            "connection_string": "connectionString",
+            "defined_tags": "definedTags",
+            "fingerprint": "fingerprint",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "instance_id": "instanceId",
+            "lifecycle_state": "lifecycleState",
+            "service_host_key_fingerprint": "serviceHostKeyFingerprint",
+            "vnc_connection_string": "vncConnectionString",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -5529,52 +5603,51 @@ async def update_instance_console_connection(
     opc_request_id: str = None,
     if_match: str = None,
     defined_tags: Dict = None,
-    freeform_tags: Dict = None
+    freeform_tags: Dict = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    UpdateInstanceConsoleConnection
-        Updates the defined tags and free-form tags for the specified instance console connection.
 
-    Args:
-        instance_console_connection_id(str):
-            The OCID of the instance console connection.
+        UpdateInstanceConsoleConnection
+            Updates the defined tags and free-form tags for the specified instance console connection.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            instance_console_connection_id(str):
+                The OCID of the instance console connection.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-    Returns:
-        Dict[str, Any]
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'defined_tags': 'definedTags', 'freeform_tags': 'freeformTags'}
+    payload = {"defined_tags": "definedTags", "freeform_tags": "freeformTags"}
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -5592,60 +5665,58 @@ Example: `{"Department": "Finance"}`
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'compartment_id': 'compartmentId',
-             'connection_string': 'connectionString',
-             'defined_tags': 'definedTags',
-             'fingerprint': 'fingerprint',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'lifecycle_state': 'lifecycleState',
-             'service_host_key_fingerprint': 'serviceHostKeyFingerprint',
-             'vnc_connection_string': 'vncConnectionString'}
+        {
+            "compartment_id": "compartmentId",
+            "connection_string": "connectionString",
+            "defined_tags": "definedTags",
+            "fingerprint": "fingerprint",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "instance_id": "instanceId",
+            "lifecycle_state": "lifecycleState",
+            "service_host_key_fingerprint": "serviceHostKeyFingerprint",
+            "vnc_connection_string": "vncConnectionString",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def delete_instance_console_connection(
-    hub,
-    ctx,
-    instance_console_connection_id: str,
-    if_match: str = None
+    hub, ctx, instance_console_connection_id: str, if_match: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    DeleteInstanceConsoleConnection
-        Deletes the specified instance console connection.
 
-    Args:
-        instance_console_connection_id(str):
-            The OCID of the instance console connection.
+        DeleteInstanceConsoleConnection
+            Deletes the specified instance console connection.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+        Args:
+            instance_console_connection_id(str):
+                The OCID of the instance console connection.
 
-    Returns:
-        Dict[str, Any]
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -5668,9 +5739,7 @@ will be updated or deleted only if the etag you provide matches the resource's c
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -5685,66 +5754,65 @@ async def list_console_histories(
     instance_id: str = None,
     sort_by: str = None,
     sort_order: str = None,
-    lifecycle_state: str = None
+    lifecycle_state: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListConsoleHistories
-        Lists the console history metadata for the specified compartment or instance.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        ListConsoleHistories
+            Lists the console history metadata for the specified compartment or instance.
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        instance_id(str, Optional):
-            The OCID of the instance. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            instance_id(str, Optional):
+                The OCID of the instance. Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-        lifecycle_state(str, Optional):
-            A filter to only return resources that match the given lifecycle state. The state
-value is case-insensitive.
-. Defaults to None.
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            lifecycle_state(str, Optional):
+                A filter to only return resources that match the given lifecycle state. The state
+    value is case-insensitive.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -5754,10 +5822,17 @@ value is case-insensitive.
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/instanceConsoleHistories/".format(
-            **{}
-        ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "limit": limit, "page": page, "instanceId": instance_id, "sortBy": sort_by, "sortOrder": sort_order, "lifecycleState": lifecycle_state},
+        path="/instanceConsoleHistories/".format(**{}),
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "limit": limit,
+            "page": page,
+            "instanceId": instance_id,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+            "lifecycleState": lifecycle_state,
+        },
         data=payload,
         headers={},
     )
@@ -5767,9 +5842,7 @@ value is case-insensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -5781,77 +5854,79 @@ async def capture_console_history(
     opc_retry_token: str = None,
     defined_tags: Dict = None,
     display_name: str = None,
-    freeform_tags: Dict = None
+    freeform_tags: Dict = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    CaptureConsoleHistory
-        Captures the most recent serial console data (up to a megabyte) for the
-    specified instance.
 
-    The `CaptureConsoleHistory` operation works with the other console history operations
-    as described below.
+        CaptureConsoleHistory
+            Captures the most recent serial console data (up to a megabyte) for the
+        specified instance.
 
-    1. Use `CaptureConsoleHistory` to request the capture of up to a megabyte of the
-    most recent console history. This call returns a `ConsoleHistory`
-    object. The object will have a state of REQUESTED.
-    2. Wait for the capture operation to succeed by polling `GetConsoleHistory` with
-    the identifier of the console history metadata. The state of the
-    `ConsoleHistory` object will go from REQUESTED to GETTING-HISTORY and
-    then SUCCEEDED (or FAILED).
-    3. Use `GetConsoleHistoryContent` to get the actual console history data (not the
-    metadata).
-    4. Optionally, use `DeleteConsoleHistory` to delete the console history metadata
-    and the console history data.
+        The `CaptureConsoleHistory` operation works with the other console history operations
+        as described below.
 
-    Args:
-        instance_id(str):
-            The OCID of the instance to get the console history from.
+        1. Use `CaptureConsoleHistory` to request the capture of up to a megabyte of the
+        most recent console history. This call returns a `ConsoleHistory`
+        object. The object will have a state of REQUESTED.
+        2. Wait for the capture operation to succeed by polling `GetConsoleHistory` with
+        the identifier of the console history metadata. The state of the
+        `ConsoleHistory` object will go from REQUESTED to GETTING-HISTORY and
+        then SUCCEEDED (or FAILED).
+        3. Use `GetConsoleHistoryContent` to get the actual console history data (not the
+        metadata).
+        4. Optionally, use `DeleteConsoleHistory` to delete the console history metadata
+        and the console history data.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+        Args:
+            instance_id(str):
+                The OCID of the instance to get the console history from.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-    Returns:
-        Dict[str, Any]
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'defined_tags': 'definedTags', 'display_name': 'displayName', 'freeform_tags': 'freeformTags', 'instance_id': 'instanceId'}
+    payload = {
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "freeform_tags": "freeformTags",
+        "instance_id": "instanceId",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/instanceConsoleHistories/".format(
-            **{}
-        ),
+        path="/instanceConsoleHistories/".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-retry-token": opc_retry_token},
@@ -5862,40 +5937,40 @@ Example: `{"Department": "Finance"}`
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'lifecycle_state': 'lifecycleState',
-             'time_created': 'timeCreated'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "instance_id": "instanceId",
+            "lifecycle_state": "lifecycleState",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def get_console_history(
-    hub,
-    ctx,
-    instance_console_history_id: str
+    hub, ctx, instance_console_history_id: str
 ) -> Dict[str, Any]:
     r"""
-    
+
     GetConsoleHistory
         Shows the metadata for the specified console history.
     See [CaptureConsoleHistory](#/en/iaas/latest/ConsoleHistory/CaptureConsoleHistory)
@@ -5909,7 +5984,6 @@ async def get_console_history(
         Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -5932,29 +6006,31 @@ async def get_console_history(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'lifecycle_state': 'lifecycleState',
-             'time_created': 'timeCreated'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "instance_id": "instanceId",
+            "lifecycle_state": "lifecycleState",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -5966,52 +6042,55 @@ async def update_console_history(
     if_match: str = None,
     defined_tags: Dict = None,
     display_name: str = None,
-    freeform_tags: Dict = None
+    freeform_tags: Dict = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    UpdateConsoleHistory
-        Updates the specified console history metadata.
 
-    Args:
-        instance_console_history_id(str):
-            The OCID of the console history.
+        UpdateConsoleHistory
+            Updates the specified console history metadata.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+        Args:
+            instance_console_history_id(str):
+                The OCID of the console history.
 
-        defined_tags(Dict, Optional):
-            Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
-. Defaults to None.
+            defined_tags(Dict, Optional):
+                Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+    Example: `{"Operations": {"CostCenter": "42"}}`
+    . Defaults to None.
 
-        freeform_tags(Dict, Optional):
-            Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-Example: `{"Department": "Finance"}`
-. Defaults to None.
+            freeform_tags(Dict, Optional):
+                Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
-    Returns:
-        Dict[str, Any]
+    Example: `{"Department": "Finance"}`
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'defined_tags': 'definedTags', 'display_name': 'displayName', 'freeform_tags': 'freeformTags'}
+    payload = {
+        "defined_tags": "definedTags",
+        "display_name": "displayName",
+        "freeform_tags": "freeformTags",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -6029,59 +6108,57 @@ Example: `{"Department": "Finance"}`
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'lifecycle_state': 'lifecycleState',
-             'time_created': 'timeCreated'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "instance_id": "instanceId",
+            "lifecycle_state": "lifecycleState",
+            "time_created": "timeCreated",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def delete_console_history(
-    hub,
-    ctx,
-    instance_console_history_id: str,
-    if_match: str = None
+    hub, ctx, instance_console_history_id: str, if_match: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    DeleteConsoleHistory
-        Deletes the specified console history metadata and the console history data.
 
-    Args:
-        instance_console_history_id(str):
-            The OCID of the console history.
+        DeleteConsoleHistory
+            Deletes the specified console history metadata and the console history data.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+        Args:
+            instance_console_history_id(str):
+                The OCID of the console history.
 
-    Returns:
-        Dict[str, Any]
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -6104,22 +6181,16 @@ will be updated or deleted only if the etag you provide matches the resource's c
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
 
 async def get_console_history_content(
-    hub,
-    ctx,
-    instance_console_history_id: str,
-    offset: int = None,
-    length: int = None
+    hub, ctx, instance_console_history_id: str, offset: int = None, length: int = None
 ) -> Dict[str, Any]:
     r"""
-    
+
     GetConsoleHistoryContent
         Gets the actual console history data (not the metadata).
     See [CaptureConsoleHistory](#/en/iaas/latest/ConsoleHistory/CaptureConsoleHistory)
@@ -6139,7 +6210,6 @@ async def get_console_history_content(
         Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -6162,7 +6232,6 @@ async def get_console_history_content(
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
     return result
 
@@ -6174,94 +6243,91 @@ async def instance_action(
     action: str,
     action_type: str,
     opc_retry_token: str = None,
-    if_match: str = None
+    if_match: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    InstanceAction
-        Performs one of the following power actions on the specified instance:
 
-    - **START** - Powers on the instance.
+        InstanceAction
+            Performs one of the following power actions on the specified instance:
 
-    - **STOP** - Powers off the instance.
+        - **START** - Powers on the instance.
 
-    - **RESET** - Powers off the instance and then powers it back on.
+        - **STOP** - Powers off the instance.
 
-    - **SOFTSTOP** - Gracefully shuts down the instance by sending a shutdown command to the operating system.
-    After waiting 15 minutes for the OS to shut down, the instance is powered off.
-    If the applications that run on the instance take more than 15 minutes to shut down, they could be improperly stopped, resulting
-    in data corruption. To avoid this, manually shut down the instance using the commands available in the OS before you softstop the
-    instance.
+        - **RESET** - Powers off the instance and then powers it back on.
 
-    - **SOFTRESET** - Gracefully reboots the instance by sending a shutdown command to the operating system.
-    After waiting 15 minutes for the OS to shut down, the instance is powered off and
-    then powered back on.
+        - **SOFTSTOP** - Gracefully shuts down the instance by sending a shutdown command to the operating system.
+        After waiting 15 minutes for the OS to shut down, the instance is powered off.
+        If the applications that run on the instance take more than 15 minutes to shut down, they could be improperly stopped, resulting
+        in data corruption. To avoid this, manually shut down the instance using the commands available in the OS before you softstop the
+        instance.
 
-
-    - **SENDDIAGNOSTICINTERRUPT** - For advanced users. **Caution: Sending a diagnostic interrupt to a live system can
-    cause data corruption or system failure.** Sends a diagnostic interrupt that causes the instance's
-    OS to crash and then reboot. Before you send a diagnostic interrupt, you must configure the instance to generate a
-    crash dump file when it crashes. The crash dump captures information about the state of the OS at the time of
-    the crash. After the OS restarts, you can analyze the crash dump to diagnose the issue. For more information, see
-    [Sending a Diagnostic Interrupt](/iaas/Content/Compute/Tasks/sendingdiagnosticinterrupt.htm).
+        - **SOFTRESET** - Gracefully reboots the instance by sending a shutdown command to the operating system.
+        After waiting 15 minutes for the OS to shut down, the instance is powered off and
+        then powered back on.
 
 
-
-    - **DIAGNOSTICREBOOT** - Powers off the instance, rebuilds it, and then powers it back on.
-    Before you send a diagnostic reboot, restart the instance's OS, confirm that the instance and networking settings are configured
-    correctly, and try other [troubleshooting steps](/iaas/Content/Compute/References/troubleshooting-compute-instances.htm).
-    Use diagnostic reboot as a final attempt to troubleshoot an unreachable instance. For virtual machine (VM) instances only.
-    For more information, see [Performing a Diagnostic Reboot](/iaas/Content/Compute/Tasks/diagnostic-reboot.htm).
-
-
-    - **REBOOTMIGRATE** - Powers off the instance, moves it to new hardware, and then powers it back on. For more information, see
-    [Infrastructure Maintenance](/iaas/Content/Compute/References/infrastructure-maintenance.htm).
+        - **SENDDIAGNOSTICINTERRUPT** - For advanced users. **Caution: Sending a diagnostic interrupt to a live system can
+        cause data corruption or system failure.** Sends a diagnostic interrupt that causes the instance's
+        OS to crash and then reboot. Before you send a diagnostic interrupt, you must configure the instance to generate a
+        crash dump file when it crashes. The crash dump captures information about the state of the OS at the time of
+        the crash. After the OS restarts, you can analyze the crash dump to diagnose the issue. For more information, see
+        [Sending a Diagnostic Interrupt](/iaas/Content/Compute/Tasks/sendingdiagnosticinterrupt.htm).
 
 
-    For more information about managing instance lifecycle states, see
-    [Stopping and Starting an Instance](/iaas/Content/Compute/Tasks/restartinginstance.htm).
 
-    Args:
-        instance_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
+        - **DIAGNOSTICREBOOT** - Powers off the instance, rebuilds it, and then powers it back on.
+        Before you send a diagnostic reboot, restart the instance's OS, confirm that the instance and networking settings are configured
+        correctly, and try other [troubleshooting steps](/iaas/Content/Compute/References/troubleshooting-compute-instances.htm).
+        Use diagnostic reboot as a final attempt to troubleshoot an unreachable instance. For virtual machine (VM) instances only.
+        For more information, see [Performing a Diagnostic Reboot](/iaas/Content/Compute/Tasks/diagnostic-reboot.htm).
 
-        action(str):
-            The action to perform on the instance.
 
-        action_type(str):
-            The type of power action to perform.
+        - **REBOOTMIGRATE** - Powers off the instance, moves it to new hardware, and then powers it back on. For more information, see
+        [Infrastructure Maintenance](/iaas/Content/Compute/References/infrastructure-maintenance.htm).
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+        For more information about managing instance lifecycle states, see
+        [Stopping and Starting an Instance](/iaas/Content/Compute/Tasks/restartinginstance.htm).
 
-    Returns:
-        Dict[str, Any]
+        Args:
+            instance_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
+
+            action(str):
+                The action to perform on the instance.
+
+            action_type(str):
+                The type of power action to perform.
+
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
+
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'action_type': 'actionType'}
+    payload = {"action_type": "actionType"}
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/instances/{instanceId}".format(
-            **{"instanceId": instance_id}
-        ),
+        path="/instances/{instanceId}".format(**{"instanceId": instance_id}),
         query_params={"action": action},
         data=payload,
         headers={"opc-retry-token": opc_retry_token, "if-match": if_match},
@@ -6272,44 +6338,47 @@ will be updated or deleted only if the etag you provide matches the resource's c
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'agent_config': 'agentConfig',
-             'availability_config': 'availabilityConfig',
-             'availability_domain': 'availabilityDomain',
-             'capacity_reservation_id': 'capacityReservationId',
-             'compartment_id': 'compartmentId',
-             'dedicated_vm_host_id': 'dedicatedVmHostId',
-             'defined_tags': 'definedTags',
-             'display_name': 'displayName',
-             'extended_metadata': 'extendedMetadata',
-             'fault_domain': 'faultDomain',
-             'freeform_tags': 'freeformTags',
-             'id': 'id',
-             'image_id': 'imageId',
-             'instance_options': 'instanceOptions',
-             'ipxe_script': 'ipxeScript',
-             'launch_mode': 'launchMode',
-             'launch_options': 'launchOptions',
-             'lifecycle_state': 'lifecycleState',
-             'metadata': 'metadata',
-             'platform_config': 'platformConfig',
-             'preemptible_instance_config': 'preemptibleInstanceConfig',
-             'region': 'region',
-             'shape': 'shape',
-             'shape_config': 'shapeConfig',
-             'source_details': 'sourceDetails',
-             'time_created': 'timeCreated',
-             'time_maintenance_reboot_due': 'timeMaintenanceRebootDue'}
+        {
+            "agent_config": "agentConfig",
+            "availability_config": "availabilityConfig",
+            "availability_domain": "availabilityDomain",
+            "capacity_reservation_id": "capacityReservationId",
+            "compartment_id": "compartmentId",
+            "dedicated_vm_host_id": "dedicatedVmHostId",
+            "defined_tags": "definedTags",
+            "display_name": "displayName",
+            "extended_metadata": "extendedMetadata",
+            "fault_domain": "faultDomain",
+            "freeform_tags": "freeformTags",
+            "id": "id",
+            "image_id": "imageId",
+            "instance_options": "instanceOptions",
+            "ipxe_script": "ipxeScript",
+            "launch_mode": "launchMode",
+            "launch_options": "launchOptions",
+            "lifecycle_state": "lifecycleState",
+            "metadata": "metadata",
+            "platform_config": "platformConfig",
+            "preemptible_instance_config": "preemptibleInstanceConfig",
+            "region": "region",
+            "shape": "shape",
+            "shape_config": "shapeConfig",
+            "source_details": "sourceDetails",
+            "time_created": "timeCreated",
+            "time_maintenance_reboot_due": "timeMaintenanceRebootDue",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
     return result
@@ -6321,41 +6390,40 @@ async def accept_shielded_integrity_policy(
     instance_id: str,
     opc_request_id: str = None,
     if_match: str = None,
-    opc_retry_token: str = None
+    opc_retry_token: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    AcceptShieldedIntegrityPolicy
-        Accept the changes to the PCR values in the measured boot report.
 
-    Args:
-        instance_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
+        AcceptShieldedIntegrityPolicy
+            Accept the changes to the PCR values in the measured boot report.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            instance_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -6370,7 +6438,11 @@ may be rejected).
         ),
         query_params={},
         data=payload,
-        headers={"opc-request-id": opc_request_id, "if-match": if_match, "opc-retry-token": opc_retry_token},
+        headers={
+            "opc-request-id": opc_request_id,
+            "if-match": if_match,
+            "opc-retry-token": opc_retry_token,
+        },
     )
 
     if not ret["result"]:
@@ -6378,9 +6450,7 @@ may be rejected).
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -6392,55 +6462,54 @@ async def change_instance_compartment(
     compartment_id: str,
     if_match: str = None,
     opc_request_id: str = None,
-    opc_retry_token: str = None
+    opc_retry_token: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ChangeInstanceCompartment
-        Moves an instance into a different compartment within the same tenancy. For information about
-    moving resources between compartments, see
-    [Moving Resources to a Different Compartment](/iaas/Content/Identity/Tasks/managingcompartments.htm#moveRes).
 
-    When you move an instance to a different compartment, associated resources such as boot volumes and VNICs
-    are not moved.
+        ChangeInstanceCompartment
+            Moves an instance into a different compartment within the same tenancy. For information about
+        moving resources between compartments, see
+        [Moving Resources to a Different Compartment](/iaas/Content/Identity/Tasks/managingcompartments.htm#moveRes).
 
-    Args:
-        instance_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
+        When you move an instance to a different compartment, associated resources such as boot volumes and VNICs
+        are not moved.
 
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment to move the instance to.
-.
+        Args:
+            instance_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment to move the instance to.
+    .
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'compartment_id': 'compartmentId'}
+    payload = {"compartment_id": "compartmentId"}
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -6450,7 +6519,11 @@ may be rejected).
         ),
         query_params={},
         data=payload,
-        headers={"if-match": if_match, "opc-request-id": opc_request_id, "opc-retry-token": opc_retry_token},
+        headers={
+            "if-match": if_match,
+            "opc-request-id": opc_request_id,
+            "opc-retry-token": opc_retry_token,
+        },
     )
 
     if not ret["result"]:
@@ -6458,20 +6531,16 @@ may be rejected).
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
 
 async def get_instance_default_credentials(
-    hub,
-    ctx,
-    instance_id: str
+    hub, ctx, instance_id: str
 ) -> Dict[str, Any]:
     r"""
-    
+
     GetInstanceDefaultCredentials
         Gets the generated credentials for the instance. Only works for instances that require a password to log in, such as Windows.
     For certain operating systems, users will be forced to change the initial credentials.
@@ -6484,7 +6553,6 @@ async def get_instance_default_credentials(
         Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -6507,21 +6575,19 @@ async def get_instance_default_credentials(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
-    resource_parameters = OrderedDict(
-                {'password': 'password', 'username': 'username'}
-    )
+    resource_parameters = OrderedDict({"password": "password", "username": "username"})
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -6535,61 +6601,60 @@ async def list_instance_devices(
     page: str = None,
     opc_request_id: str = None,
     sort_by: str = None,
-    sort_order: str = None
+    sort_order: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListInstanceDevices
-        Gets a list of all the devices for given instance. You can optionally filter results by device availability.
 
-    Args:
-        instance_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
+        ListInstanceDevices
+            Gets a list of all the devices for given instance. You can optionally filter results by device availability.
 
-        is_available(bool, Optional):
-            A filter to return only available devices or only used devices.
-. Defaults to None.
+        Args:
+            instance_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            is_available(bool, Optional):
+                A filter to return only available devices or only used devices.
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-        sort_by(str, Optional):
-            The field to sort by. You can provide one sort order (`sortOrder`). Default order for
-TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
-sort order is case sensitive.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-**Note:** In general, some "List" operations (for example, `ListInstances`) let you
-optionally filter by availability domain if the scope of the resource type is within a
-single availability domain. If you call one of these "List" operations without specifying
-an availability domain, the resources are grouped by availability domain, then sorted.
-. Defaults to None.
+            sort_by(str, Optional):
+                The field to sort by. You can provide one sort order (`sortOrder`). Default order for
+    TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME
+    sort order is case sensitive.
 
-        sort_order(str, Optional):
-            The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
-is case sensitive.
-. Defaults to None.
+    **Note:** In general, some "List" operations (for example, `ListInstances`) let you
+    optionally filter by availability domain if the scope of the resource type is within a
+    single availability domain. If you call one of these "List" operations without specifying
+    an availability domain, the resources are grouped by availability domain, then sorted.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            sort_order(str, Optional):
+                The sort order to use, either ascending (`ASC`) or descending (`DESC`). The DISPLAYNAME sort order
+    is case sensitive.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -6599,10 +6664,14 @@ is case sensitive.
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/instances/{instanceId}/devices".format(
-            **{"instanceId": instance_id}
-        ),
-        query_params={"isAvailable": is_available, "limit": limit, "page": page, "sortBy": sort_by, "sortOrder": sort_order},
+        path="/instances/{instanceId}/devices".format(**{"instanceId": instance_id}),
+        query_params={
+            "isAvailable": is_available,
+            "limit": limit,
+            "page": page,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+        },
         data=payload,
         headers={"opc-request-id": opc_request_id},
     )
@@ -6612,26 +6681,22 @@ is case sensitive.
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
 
 async def get_windows_instance_initial_credentials(
-    hub,
-    ctx,
-    instance_id: str
+    hub, ctx, instance_id: str
 ) -> Dict[str, Any]:
     r"""
-    
+
     GetWindowsInstanceInitialCredentials
         Deprecated. Use [GetInstanceDefaultCredentials](#/en/iaas/latest/InstanceCredentials/GetInstanceDefaultCredentials) instead.
 
     Gets the generated credentials for the instance. Only works for instances that require a password to log in, such as Windows.
     For certain operating systems, users will be forced to change the initial credentials.
-    
+
     DEPRECATED
 
     Args:
@@ -6642,7 +6707,6 @@ async def get_windows_instance_initial_credentials(
         Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -6665,51 +6729,45 @@ async def get_windows_instance_initial_credentials(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
-    resource_parameters = OrderedDict(
-                {'password': 'password', 'username': 'username'}
-    )
+    resource_parameters = OrderedDict({"password": "password", "username": "username"})
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def get_instance_maintenance_reboot(
-    hub,
-    ctx,
-    instance_id: str,
-    opc_request_id: str = None
+    hub, ctx, instance_id: str, opc_request_id: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    GetInstanceMaintenanceReboot
-        Gets the maximum possible date that a maintenance reboot can be extended. For more information, see
-    [Infrastructure Maintenance](/iaas/Content/Compute/References/infrastructure-maintenance.htm).
 
-    Args:
-        instance_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
+        GetInstanceMaintenanceReboot
+            Gets the maximum possible date that a maintenance reboot can be extended. For more information, see
+        [Infrastructure Maintenance](/iaas/Content/Compute/References/infrastructure-maintenance.htm).
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            instance_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -6732,50 +6790,46 @@ If you need to contact Oracle about a particular request, please provide the req
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'time_maintenance_reboot_due_max': 'timeMaintenanceRebootDueMax'}
+        {"time_maintenance_reboot_due_max": "timeMaintenanceRebootDueMax"}
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def get_measured_boot_report(
-    hub,
-    ctx,
-    instance_id: str,
-    opc_request_id: str = None
+    hub, ctx, instance_id: str, opc_request_id: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    GetMeasuredBootReport
-        Gets the measured boot report for this shielded instance.
 
-    Args:
-        instance_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
+        GetMeasuredBootReport
+            Gets the measured boot report for this shielded instance.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            instance_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
 
-    Returns:
-        Dict[str, Any]
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -6798,22 +6852,24 @@ If you need to contact Oracle about a particular request, please provide the req
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'is_policy_verification_successful': 'isPolicyVerificationSuccessful',
-             'measurements': 'measurements'}
+        {
+            "is_policy_verification_successful": "isPolicyVerificationSuccessful",
+            "measurements": "measurements",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -6825,46 +6881,45 @@ async def list_shapes(
     availability_domain: str = None,
     limit: int = None,
     page: str = None,
-    image_id: str = None
+    image_id: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListShapes
-        Lists the shapes that can be used to launch an instance within the specified compartment. You can
-    filter the list by compatibility with a specific image.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        ListShapes
+            Lists the shapes that can be used to launch an instance within the specified compartment. You can
+        filter the list by compatibility with a specific image.
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        image_id(str, Optional):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of an image. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            image_id(str, Optional):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of an image. Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -6874,10 +6929,14 @@ call. For important details about how pagination works, see
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/shapes".format(
-            **{}
-        ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "limit": limit, "page": page, "imageId": image_id},
+        path="/shapes".format(**{}),
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "limit": limit,
+            "page": page,
+            "imageId": image_id,
+        },
         data=payload,
         headers={},
     )
@@ -6887,9 +6946,7 @@ call. For important details about how pagination works, see
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -6902,50 +6959,49 @@ async def list_vnic_attachments(
     instance_id: str = None,
     limit: int = None,
     page: str = None,
-    vnic_id: str = None
+    vnic_id: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListVnicAttachments
-        Lists the VNIC attachments in the specified compartment. A VNIC attachment
-    resides in the same compartment as the attached instance. The list can be
-    filtered by instance, VNIC, or availability domain.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        ListVnicAttachments
+            Lists the VNIC attachments in the specified compartment. A VNIC attachment
+        resides in the same compartment as the attached instance. The list can be
+        filtered by instance, VNIC, or availability domain.
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        instance_id(str, Optional):
-            The OCID of the instance. Defaults to None.
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+            instance_id(str, Optional):
+                The OCID of the instance. Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        vnic_id(str, Optional):
-            The OCID of the VNIC. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            vnic_id(str, Optional):
+                The OCID of the VNIC. Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -6955,10 +7011,15 @@ call. For important details about how pagination works, see
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/vnicAttachments/".format(
-            **{}
-        ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "instanceId": instance_id, "limit": limit, "page": page, "vnicId": vnic_id},
+        path="/vnicAttachments/".format(**{}),
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "instanceId": instance_id,
+            "limit": limit,
+            "page": page,
+            "vnicId": vnic_id,
+        },
         data=payload,
         headers={},
     )
@@ -6968,9 +7029,7 @@ call. For important details about how pagination works, see
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -6981,251 +7040,259 @@ async def attach_vnic(
     create_vnic_details: make_dataclass(
         "create_vnic_details",
         [
-            ("assign_ipv6_ip", bool, field(default=None)), 
-            ("assign_private_dns_record", bool, field(default=None)), 
-            ("assign_public_ip", bool, field(default=None)), 
-            ("defined_tags", Dict, field(default=None)), 
-            ("display_name", str, field(default=None)), 
-            ("freeform_tags", Dict, field(default=None)), 
-            ("hostname_label", str, field(default=None)), 
-            ("ipv6_address_ipv6_subnet_cidr_pair_details", List[make_dataclass(
-            "ipv6_address_ipv6_subnet_cidr_pair_details",
-            [
-                ("ipv6_address", str, field(default=None)), 
-                ("ipv6_subnet_cidr", str, field(default=None))
-            ]
-            )], field(default=None)), 
-            ("nsg_ids", List[str], field(default=None)), 
-            ("private_ip", str, field(default=None)), 
-            ("skip_source_dest_check", bool, field(default=None)), 
-            ("subnet_id", str, field(default=None)), 
-            ("vlan_id", str, field(default=None))
-        ]
-        ),
+            ("assign_ipv6_ip", bool, field(default=None)),
+            ("assign_private_dns_record", bool, field(default=None)),
+            ("assign_public_ip", bool, field(default=None)),
+            ("defined_tags", Dict, field(default=None)),
+            ("display_name", str, field(default=None)),
+            ("freeform_tags", Dict, field(default=None)),
+            ("hostname_label", str, field(default=None)),
+            (
+                "ipv6_address_ipv6_subnet_cidr_pair_details",
+                List[
+                    make_dataclass(
+                        "ipv6_address_ipv6_subnet_cidr_pair_details",
+                        [
+                            ("ipv6_address", str, field(default=None)),
+                            ("ipv6_subnet_cidr", str, field(default=None)),
+                        ],
+                    )
+                ],
+                field(default=None),
+            ),
+            ("nsg_ids", List[str], field(default=None)),
+            ("private_ip", str, field(default=None)),
+            ("skip_source_dest_check", bool, field(default=None)),
+            ("subnet_id", str, field(default=None)),
+            ("vlan_id", str, field(default=None)),
+        ],
+    ),
     instance_id: str,
     opc_retry_token: str = None,
     display_name: str = None,
-    nic_index: int = None
+    nic_index: int = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    AttachVnic
-        Creates a secondary VNIC and attaches it to the specified instance.
-    For more information about secondary VNICs, see
-    [Virtual Network Interface Cards (VNICs)](/iaas/Content/Network/Tasks/managingVNICs.htm).
 
-    Args:
-        create_vnic_details(dict[str, Any]):
-            createVnicDetails.
+        AttachVnic
+            Creates a secondary VNIC and attaches it to the specified instance.
+        For more information about secondary VNICs, see
+        [Virtual Network Interface Cards (VNICs)](/iaas/Content/Network/Tasks/managingVNICs.htm).
 
-            * assign_ipv6_ip (bool, Optional):
-                Whether to allocate an IPv6 address at instance and VNIC creation from an IPv6 enabled
-subnet. Default: False. When provided you may optionally provide an IPv6 prefix
-(`ipv6SubnetCidr`) of your choice to assign the IPv6 address from. If `ipv6SubnetCidr`
-is not provided then an IPv6 prefix is chosen
-for you.
+        Args:
+            create_vnic_details(dict[str, Any]):
+                createVnicDetails.
 
-
-            * assign_private_dns_record (bool, Optional):
-                Whether the VNIC should be assigned a DNS record. If set to false, there will be no DNS record
-registration for the VNIC. If set to true, the DNS record will be registered. The default
-value is true.
-
-If you specify a `hostnameLabel`, then `assignPrivateDnsRecord` must be set to true.
+                * assign_ipv6_ip (bool, Optional):
+                    Whether to allocate an IPv6 address at instance and VNIC creation from an IPv6 enabled
+    subnet. Default: False. When provided you may optionally provide an IPv6 prefix
+    (`ipv6SubnetCidr`) of your choice to assign the IPv6 address from. If `ipv6SubnetCidr`
+    is not provided then an IPv6 prefix is chosen
+    for you.
 
 
-            * assign_public_ip (bool, Optional):
-                Whether the VNIC should be assigned a public IP address. Defaults to whether
-the subnet is public or private. If not set and the VNIC is being created
-in a private subnet (that is, where `prohibitPublicIpOnVnic` = true in the
-[Subnet](#/en/iaas/latest/Subnet/)), then no public IP address is assigned.
-If not set and the subnet is public (`prohibitPublicIpOnVnic` = false), then
-a public IP address is assigned. If set to true and
-`prohibitPublicIpOnVnic` = true, an error is returned.
+                * assign_private_dns_record (bool, Optional):
+                    Whether the VNIC should be assigned a DNS record. If set to false, there will be no DNS record
+    registration for the VNIC. If set to true, the DNS record will be registered. The default
+    value is true.
 
-**Note:** This public IP address is associated with the primary private IP
-on the VNIC. For more information, see
-[IP Addresses](/iaas/Content/Network/Tasks/managingIPaddresses.htm).
-
-**Note:** There's a limit to the number of [public IPs](#/en/iaas/latest/PublicIp/)
-a VNIC or instance can have. If you try to create a secondary VNIC
-with an assigned public IP for an instance that has already
-reached its public IP limit, an error is returned. For information
-about the public IP limits, see
-[Public IP Addresses](/iaas/Content/Network/Tasks/managingpublicIPs.htm).
-
-Example: `false`
-
-If you specify a `vlanId`, then `assignPublicIp` must be set to false. See
-[Vlan](#/en/iaas/latest/Vlan).
+    If you specify a `hostnameLabel`, then `assignPrivateDnsRecord` must be set to true.
 
 
-            * defined_tags (Dict, Optional):
-                Defined tags for this resource. Each key is predefined and scoped to a
-namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+                * assign_public_ip (bool, Optional):
+                    Whether the VNIC should be assigned a public IP address. Defaults to whether
+    the subnet is public or private. If not set and the VNIC is being created
+    in a private subnet (that is, where `prohibitPublicIpOnVnic` = true in the
+    [Subnet](#/en/iaas/latest/Subnet/)), then no public IP address is assigned.
+    If not set and the subnet is public (`prohibitPublicIpOnVnic` = false), then
+    a public IP address is assigned. If set to true and
+    `prohibitPublicIpOnVnic` = true, an error is returned.
 
-Example: `{"Operations": {"CostCenter": "42"}}`
+    **Note:** This public IP address is associated with the primary private IP
+    on the VNIC. For more information, see
+    [IP Addresses](/iaas/Content/Network/Tasks/managingIPaddresses.htm).
+
+    **Note:** There's a limit to the number of [public IPs](#/en/iaas/latest/PublicIp/)
+    a VNIC or instance can have. If you try to create a secondary VNIC
+    with an assigned public IP for an instance that has already
+    reached its public IP limit, an error is returned. For information
+    about the public IP limits, see
+    [Public IP Addresses](/iaas/Content/Network/Tasks/managingpublicIPs.htm).
+
+    Example: `false`
+
+    If you specify a `vlanId`, then `assignPublicIp` must be set to false. See
+    [Vlan](#/en/iaas/latest/Vlan).
 
 
-            * display_name (str, Optional):
+                * defined_tags (Dict, Optional):
+                    Defined tags for this resource. Each key is predefined and scoped to a
+    namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+
+    Example: `{"Operations": {"CostCenter": "42"}}`
+
+
+                * display_name (str, Optional):
+                    A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+
+
+                * freeform_tags (Dict, Optional):
+                    Free-form tags for this resource. Each tag is a simple key-value pair with no
+    predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
+
+    Example: `{"Department": "Finance"}`
+
+
+                * hostname_label (str, Optional):
+                    The hostname for the VNIC's primary private IP. Used for DNS. The value is the hostname
+    portion of the primary private IP's fully qualified domain name (FQDN)
+    (for example, `bminstance1` in FQDN `bminstance1.subnet123.vcn1.oraclevcn.com`).
+    Must be unique across all VNICs in the subnet and comply with
+    [RFC 952](https://tools.ietf.org/html/rfc952) and
+    [RFC 1123](https://tools.ietf.org/html/rfc1123).
+    The value appears in the [Vnic](#/en/iaas/latest/Vnic/) object and also the
+    [PrivateIp](#/en/iaas/latest/PrivateIp/) object returned by
+    [ListPrivateIps](#/en/iaas/latest/PrivateIp/ListPrivateIps) and
+    [GetPrivateIp](#/en/iaas/latest/PrivateIp/GetPrivateIp).
+
+    For more information, see
+    [DNS in Your Virtual Cloud Network](/iaas/Content/Network/Concepts/dns.htm).
+
+    When launching an instance, use this `hostnameLabel` instead
+    of the deprecated `hostnameLabel` in
+    [LaunchInstanceDetails](#/en/iaas/latest/requests/LaunchInstanceDetails).
+    If you provide both, the values must match.
+
+    Example: `bminstance1`
+
+    If you specify a `vlanId`, the `hostnameLabel` cannot be specified. VNICs on a VLAN
+    can not be assigned a hostname. See [Vlan](#/en/iaas/latest/Vlan).
+
+
+                * ipv6_address_ipv6_subnet_cidr_pair_details (List[dict[str, Any]], Optional):
+                    A list of IPv6 prefix ranges from which the VNIC is assigned an IPv6 address.
+    You can provide only the prefix ranges from which OCI selects an available
+    address from the range. You can optionally choose to leave the prefix range empty
+    and instead provide the specific IPv6 address within that range to use.
+
+
+                    * ipv6_address (str, Optional):
+                        An IPv6 address of your choice. Must be an available IPv6 address within the subnet's prefix.
+    If an IPv6 address is not provided:
+    - Oracle will automatically assign an IPv6 address from the subnet's IPv6 prefix if and only if there is only one IPv6 prefix on the subnet.
+    - Oracle will automatically assign an IPv6 address from the subnet's IPv6 Oracle GUA prefix if it exists on the subnet.
+
+
+                    * ipv6_subnet_cidr (str, Optional):
+                        The IPv6 prefix allocated to the subnet.
+
+
+                * nsg_ids (List[str], Optional):
+                    A list of the OCIDs of the network security groups (NSGs) to add the VNIC to. For more
+    information about NSGs, see
+    [NetworkSecurityGroup](#/en/iaas/latest/NetworkSecurityGroup/).
+
+    If a `vlanId` is specified, the `nsgIds` cannot be specified. The `vlanId`
+    indicates that the VNIC will belong to a VLAN instead of a subnet. With VLANs,
+    all VNICs in the VLAN belong to the NSGs that are associated with the VLAN.
+    See [Vlan](#/en/iaas/latest/Vlan).
+
+
+                * private_ip (str, Optional):
+                    A private IP address of your choice to assign to the VNIC. Must be an
+    available IP address within the subnet's CIDR. If you don't specify a
+    value, Oracle automatically assigns a private IP address from the subnet.
+    This is the VNIC's *primary* private IP address. The value appears in
+    the [Vnic](#/en/iaas/latest/Vnic/) object and also the
+    [PrivateIp](#/en/iaas/latest/PrivateIp/) object returned by
+    [ListPrivateIps](#/en/iaas/latest/PrivateIp/ListPrivateIps) and
+    [GetPrivateIp](#/en/iaas/latest/PrivateIp/GetPrivateIp).
+
+
+    If you specify a `vlanId`, the `privateIp` cannot be specified.
+    See [Vlan](#/en/iaas/latest/Vlan).
+
+    Example: `10.0.3.3`
+
+
+                * skip_source_dest_check (bool, Optional):
+                    Whether the source/destination check is disabled on the VNIC.
+    Defaults to `false`, which means the check is performed. For information
+    about why you would skip the source/destination check, see
+    [Using a Private IP as a Route Target](/iaas/Content/Network/Tasks/managingroutetables.htm#privateip).
+
+
+    If you specify a `vlanId`, the `skipSourceDestCheck` cannot be specified because the
+    source/destination check is always disabled for VNICs in a VLAN. See
+    [Vlan](#/en/iaas/latest/Vlan).
+
+    Example: `true`
+
+
+                * subnet_id (str, Optional):
+                    The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the subnet to create the VNIC in. When launching an instance,
+    use this `subnetId` instead of the deprecated `subnetId` in
+    [LaunchInstanceDetails](#/en/iaas/latest/requests/LaunchInstanceDetails).
+    At least one of them is required; if you provide both, the values must match.
+
+    If you are an Oracle Cloud VMware Solution customer and creating a secondary
+    VNIC in a VLAN instead of a subnet, provide a `vlanId` instead of a `subnetId`.
+    If you provide both a `vlanId` and `subnetId`, the request fails.
+
+
+                * vlan_id (str, Optional):
+                    Provide this attribute only if you are an Oracle Cloud VMware Solution
+    customer and creating a secondary VNIC in a VLAN. The value is the [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the VLAN.
+    See [Vlan](#/en/iaas/latest/Vlan).
+
+    Provide a `vlanId` instead of a `subnetId`. If you provide both a
+    `vlanId` and `subnetId`, the request fails.
+
+
+            instance_id(str):
+                The OCID of the instance.
+
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
+
+            display_name(str, Optional):
                 A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
+    Avoid entering confidential information.
+    . Defaults to None.
 
+            nic_index(int, Optional):
+                Which physical network interface card (NIC) the VNIC will use. Defaults to 0.
+    Certain bare metal instance shapes have two active physical NICs (0 and 1). If
+    you add a secondary VNIC to one of these instances, you can specify which NIC
+    the VNIC will use. For more information, see
+    [Virtual Network Interface Cards (VNICs)](/iaas/Content/Network/Tasks/managingVNICs.htm).
+    . Defaults to None.
 
-            * freeform_tags (Dict, Optional):
-                Free-form tags for this resource. Each tag is a simple key-value pair with no
-predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
-
-Example: `{"Department": "Finance"}`
-
-
-            * hostname_label (str, Optional):
-                The hostname for the VNIC's primary private IP. Used for DNS. The value is the hostname
-portion of the primary private IP's fully qualified domain name (FQDN)
-(for example, `bminstance1` in FQDN `bminstance1.subnet123.vcn1.oraclevcn.com`).
-Must be unique across all VNICs in the subnet and comply with
-[RFC 952](https://tools.ietf.org/html/rfc952) and
-[RFC 1123](https://tools.ietf.org/html/rfc1123).
-The value appears in the [Vnic](#/en/iaas/latest/Vnic/) object and also the
-[PrivateIp](#/en/iaas/latest/PrivateIp/) object returned by
-[ListPrivateIps](#/en/iaas/latest/PrivateIp/ListPrivateIps) and
-[GetPrivateIp](#/en/iaas/latest/PrivateIp/GetPrivateIp).
-
-For more information, see
-[DNS in Your Virtual Cloud Network](/iaas/Content/Network/Concepts/dns.htm).
-
-When launching an instance, use this `hostnameLabel` instead
-of the deprecated `hostnameLabel` in
-[LaunchInstanceDetails](#/en/iaas/latest/requests/LaunchInstanceDetails).
-If you provide both, the values must match.
-
-Example: `bminstance1`
-
-If you specify a `vlanId`, the `hostnameLabel` cannot be specified. VNICs on a VLAN
-can not be assigned a hostname. See [Vlan](#/en/iaas/latest/Vlan).
-
-
-            * ipv6_address_ipv6_subnet_cidr_pair_details (List[dict[str, Any]], Optional):
-                A list of IPv6 prefix ranges from which the VNIC is assigned an IPv6 address.
-You can provide only the prefix ranges from which OCI selects an available
-address from the range. You can optionally choose to leave the prefix range empty
-and instead provide the specific IPv6 address within that range to use.
-
-
-                * ipv6_address (str, Optional):
-                    An IPv6 address of your choice. Must be an available IPv6 address within the subnet's prefix.
-If an IPv6 address is not provided:
-- Oracle will automatically assign an IPv6 address from the subnet's IPv6 prefix if and only if there is only one IPv6 prefix on the subnet.
-- Oracle will automatically assign an IPv6 address from the subnet's IPv6 Oracle GUA prefix if it exists on the subnet.
-
-
-                * ipv6_subnet_cidr (str, Optional):
-                    The IPv6 prefix allocated to the subnet.
-
-
-            * nsg_ids (List[str], Optional):
-                A list of the OCIDs of the network security groups (NSGs) to add the VNIC to. For more
-information about NSGs, see
-[NetworkSecurityGroup](#/en/iaas/latest/NetworkSecurityGroup/).
-
-If a `vlanId` is specified, the `nsgIds` cannot be specified. The `vlanId`
-indicates that the VNIC will belong to a VLAN instead of a subnet. With VLANs,
-all VNICs in the VLAN belong to the NSGs that are associated with the VLAN.
-See [Vlan](#/en/iaas/latest/Vlan).
-
-
-            * private_ip (str, Optional):
-                A private IP address of your choice to assign to the VNIC. Must be an
-available IP address within the subnet's CIDR. If you don't specify a
-value, Oracle automatically assigns a private IP address from the subnet.
-This is the VNIC's *primary* private IP address. The value appears in
-the [Vnic](#/en/iaas/latest/Vnic/) object and also the
-[PrivateIp](#/en/iaas/latest/PrivateIp/) object returned by
-[ListPrivateIps](#/en/iaas/latest/PrivateIp/ListPrivateIps) and
-[GetPrivateIp](#/en/iaas/latest/PrivateIp/GetPrivateIp).
-
-
-If you specify a `vlanId`, the `privateIp` cannot be specified.
-See [Vlan](#/en/iaas/latest/Vlan).
-
-Example: `10.0.3.3`
-
-
-            * skip_source_dest_check (bool, Optional):
-                Whether the source/destination check is disabled on the VNIC.
-Defaults to `false`, which means the check is performed. For information
-about why you would skip the source/destination check, see
-[Using a Private IP as a Route Target](/iaas/Content/Network/Tasks/managingroutetables.htm#privateip).
-
-
-If you specify a `vlanId`, the `skipSourceDestCheck` cannot be specified because the
-source/destination check is always disabled for VNICs in a VLAN. See
-[Vlan](#/en/iaas/latest/Vlan).
-
-Example: `true`
-
-
-            * subnet_id (str, Optional):
-                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the subnet to create the VNIC in. When launching an instance,
-use this `subnetId` instead of the deprecated `subnetId` in
-[LaunchInstanceDetails](#/en/iaas/latest/requests/LaunchInstanceDetails).
-At least one of them is required; if you provide both, the values must match.
-
-If you are an Oracle Cloud VMware Solution customer and creating a secondary
-VNIC in a VLAN instead of a subnet, provide a `vlanId` instead of a `subnetId`.
-If you provide both a `vlanId` and `subnetId`, the request fails.
-
-
-            * vlan_id (str, Optional):
-                Provide this attribute only if you are an Oracle Cloud VMware Solution
-customer and creating a secondary VNIC in a VLAN. The value is the [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the VLAN.
-See [Vlan](#/en/iaas/latest/Vlan).
-
-Provide a `vlanId` instead of a `subnetId`. If you provide both a
-`vlanId` and `subnetId`, the request fails.
-
-
-        instance_id(str):
-            The OCID of the instance.
-
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
-
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
-
-        nic_index(int, Optional):
-            Which physical network interface card (NIC) the VNIC will use. Defaults to 0.
-Certain bare metal instance shapes have two active physical NICs (0 and 1). If
-you add a secondary VNIC to one of these instances, you can specify which NIC
-the VNIC will use. For more information, see
-[Virtual Network Interface Cards (VNICs)](/iaas/Content/Network/Tasks/managingVNICs.htm).
-. Defaults to None.
-
-    Returns:
-        Dict[str, Any]
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'create_vnic_details': 'createVnicDetails', 'display_name': 'displayName', 'instance_id': 'instanceId', 'nic_index': 'nicIndex'}
+    payload = {
+        "create_vnic_details": "createVnicDetails",
+        "display_name": "displayName",
+        "instance_id": "instanceId",
+        "nic_index": "nicIndex",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/vnicAttachments/".format(
-            **{}
-        ),
+        path="/vnicAttachments/".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-retry-token": opc_retry_token},
@@ -7236,43 +7303,41 @@ the VNIC will use. For more information, see
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'display_name': 'displayName',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'lifecycle_state': 'lifecycleState',
-             'nic_index': 'nicIndex',
-             'subnet_id': 'subnetId',
-             'time_created': 'timeCreated',
-             'vlan_id': 'vlanId',
-             'vlan_tag': 'vlanTag',
-             'vnic_id': 'vnicId'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "display_name": "displayName",
+            "id": "id",
+            "instance_id": "instanceId",
+            "lifecycle_state": "lifecycleState",
+            "nic_index": "nicIndex",
+            "subnet_id": "subnetId",
+            "time_created": "timeCreated",
+            "vlan_id": "vlanId",
+            "vlan_tag": "vlanTag",
+            "vnic_id": "vnicId",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
-async def get_vnic_attachment(
-    hub,
-    ctx,
-    vnic_attachment_id: str
-) -> Dict[str, Any]:
+async def get_vnic_attachment(hub, ctx, vnic_attachment_id: str) -> Dict[str, Any]:
     r"""
-    
+
     GetVnicAttachment
         Gets the information for the specified VNIC attachment.
 
@@ -7284,7 +7349,6 @@ async def get_vnic_attachment(
         Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -7307,71 +7371,69 @@ async def get_vnic_attachment(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'display_name': 'displayName',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'lifecycle_state': 'lifecycleState',
-             'nic_index': 'nicIndex',
-             'subnet_id': 'subnetId',
-             'time_created': 'timeCreated',
-             'vlan_id': 'vlanId',
-             'vlan_tag': 'vlanTag',
-             'vnic_id': 'vnicId'}
+        {
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "display_name": "displayName",
+            "id": "id",
+            "instance_id": "instanceId",
+            "lifecycle_state": "lifecycleState",
+            "nic_index": "nicIndex",
+            "subnet_id": "subnetId",
+            "time_created": "timeCreated",
+            "vlan_id": "vlanId",
+            "vlan_tag": "vlanTag",
+            "vnic_id": "vnicId",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def detach_vnic(
-    hub,
-    ctx,
-    vnic_attachment_id: str,
-    if_match: str = None
+    hub, ctx, vnic_attachment_id: str, if_match: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    DetachVnic
-        Detaches and deletes the specified secondary VNIC.
-    This operation cannot be used on the instance's primary VNIC.
-    When you terminate an instance, all attached VNICs (primary
-    and secondary) are automatically detached and deleted.
 
-    **Important:** If the VNIC has a
-    [private IP](#/en/iaas/latest/PrivateIp/) that is the
-    [target of a route rule](/iaas/Content/Network/Tasks/managingroutetables.htm#privateip),
-    deleting the VNIC causes that route rule to blackhole and the traffic
-    will be dropped.
+        DetachVnic
+            Detaches and deletes the specified secondary VNIC.
+        This operation cannot be used on the instance's primary VNIC.
+        When you terminate an instance, all attached VNICs (primary
+        and secondary) are automatically detached and deleted.
 
-    Args:
-        vnic_attachment_id(str):
-            The OCID of the VNIC attachment.
+        **Important:** If the VNIC has a
+        [private IP](#/en/iaas/latest/PrivateIp/) that is the
+        [target of a route rule](/iaas/Content/Network/Tasks/managingroutetables.htm#privateip),
+        deleting the VNIC causes that route rule to blackhole and the traffic
+        will be dropped.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+        Args:
+            vnic_attachment_id(str):
+                The OCID of the VNIC attachment.
 
-    Returns:
-        Dict[str, Any]
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -7394,9 +7456,7 @@ will be updated or deleted only if the etag you provide matches the resource's c
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -7409,52 +7469,51 @@ async def list_volume_attachments(
     limit: int = None,
     page: str = None,
     instance_id: str = None,
-    volume_id: str = None
+    volume_id: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    ListVolumeAttachments
-        Lists the volume attachments in the specified compartment. You can filter the
-    list by specifying an instance OCID, volume OCID, or both.
 
-    Currently, the only supported volume attachment type are [IScsiVolumeAttachment](#/en/iaas/latest/IScsiVolumeAttachment/) and
-    [ParavirtualizedVolumeAttachment](#/en/iaas/latest/ParavirtualizedVolumeAttachment/).
+        ListVolumeAttachments
+            Lists the volume attachments in the specified compartment. You can filter the
+        list by specifying an instance OCID, volume OCID, or both.
 
-    Args:
-        compartment_id(str):
-            The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
+        Currently, the only supported volume attachment type are [IScsiVolumeAttachment](#/en/iaas/latest/IScsiVolumeAttachment/) and
+        [ParavirtualizedVolumeAttachment](#/en/iaas/latest/ParavirtualizedVolumeAttachment/).
 
-        availability_domain(str, Optional):
-            The name of the availability domain.
+        Args:
+            compartment_id(str):
+                The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the compartment.
 
-Example: `Uocm:PHX-AD-1`
-. Defaults to None.
+            availability_domain(str, Optional):
+                The name of the availability domain.
 
-        limit(int, Optional):
-            For list pagination. The maximum number of results per page, or items to return in a paginated
-"List" call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    Example: `Uocm:PHX-AD-1`
+    . Defaults to None.
 
-Example: `50`
-. Defaults to None.
+            limit(int, Optional):
+                For list pagination. The maximum number of results per page, or items to return in a paginated
+    "List" call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
 
-        page(str, Optional):
-            For list pagination. The value of the `opc-next-page` response header from the previous "List"
-call. For important details about how pagination works, see
-[List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
-. Defaults to None.
+    Example: `50`
+    . Defaults to None.
 
-        instance_id(str, Optional):
-            The OCID of the instance. Defaults to None.
+            page(str, Optional):
+                For list pagination. The value of the `opc-next-page` response header from the previous "List"
+    call. For important details about how pagination works, see
+    [List Pagination](/iaas/Content/API/Concepts/usingapi.htm#nine).
+    . Defaults to None.
 
-        volume_id(str, Optional):
-            The OCID of the volume. Defaults to None.
+            instance_id(str, Optional):
+                The OCID of the instance. Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            volume_id(str, Optional):
+                The OCID of the volume. Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -7464,10 +7523,15 @@ call. For important details about how pagination works, see
     ret = await hub.tool.oci.session.request(
         ctx,
         method="get",
-        path="/volumeAttachments/".format(
-            **{}
-        ),
-        query_params={"availabilityDomain": availability_domain, "compartmentId": compartment_id, "limit": limit, "page": page, "instanceId": instance_id, "volumeId": volume_id},
+        path="/volumeAttachments/".format(**{}),
+        query_params={
+            "availabilityDomain": availability_domain,
+            "compartmentId": compartment_id,
+            "limit": limit,
+            "page": page,
+            "instanceId": instance_id,
+            "volumeId": volume_id,
+        },
         data=payload,
         headers={},
     )
@@ -7477,9 +7541,7 @@ call. For important details about how pagination works, see
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
-
 
     return result
 
@@ -7494,67 +7556,72 @@ async def attach_volume(
     device: str = None,
     display_name: str = None,
     is_read_only: bool = None,
-    is_shareable: bool = None
+    is_shareable: bool = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    AttachVolume
-        Attaches the specified storage volume to the specified instance.
 
-    Args:
-        instance_id(str):
-            The OCID of the instance.
+        AttachVolume
+            Attaches the specified storage volume to the specified instance.
 
-        type_(str):
-            The type of volume. The only supported values are "iscsi" and "paravirtualized".
-.
+        Args:
+            instance_id(str):
+                The OCID of the instance.
 
-        volume_id(str):
-            The OCID of the volume.
+            type_(str):
+                The type of volume. The only supported values are "iscsi" and "paravirtualized".
+    .
 
-        opc_retry_token(str, Optional):
-            A token that uniquely identifies a request so it can be retried in case of a timeout or
-server error without risk of executing that same action again. Retry tokens expire after 24
-hours, but can be invalidated before then due to conflicting operations (for example, if a resource
-has been deleted and purged from the system, then a retry of the original creation request
-may be rejected).
-. Defaults to None.
+            volume_id(str):
+                The OCID of the volume.
 
-        device(str, Optional):
-            The device name. To retrieve a list of devices for a given instance, see [ListInstanceDevices](#/en/iaas/latest/Device/ListInstanceDevices). Defaults to None.
+            opc_retry_token(str, Optional):
+                A token that uniquely identifies a request so it can be retried in case of a timeout or
+    server error without risk of executing that same action again. Retry tokens expire after 24
+    hours, but can be invalidated before then due to conflicting operations (for example, if a resource
+    has been deleted and purged from the system, then a retry of the original creation request
+    may be rejected).
+    . Defaults to None.
 
-        display_name(str, Optional):
-            A user-friendly name. Does not have to be unique, and it's changeable.
-Avoid entering confidential information.
-. Defaults to None.
+            device(str, Optional):
+                The device name. To retrieve a list of devices for a given instance, see [ListInstanceDevices](#/en/iaas/latest/Device/ListInstanceDevices). Defaults to None.
 
-        is_read_only(bool, Optional):
-            Whether the attachment was created in read-only mode. Defaults to None.
+            display_name(str, Optional):
+                A user-friendly name. Does not have to be unique, and it's changeable.
+    Avoid entering confidential information.
+    . Defaults to None.
 
-        is_shareable(bool, Optional):
-            Whether the attachment should be created in shareable mode. If an attachment
-is created in shareable mode, then other instances can attach the same volume, provided
-that they also create their attachments in shareable mode. Only certain volume types can
-be attached in shareable mode. Defaults to false if not specified.
-. Defaults to None.
+            is_read_only(bool, Optional):
+                Whether the attachment was created in read-only mode. Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            is_shareable(bool, Optional):
+                Whether the attachment should be created in shareable mode. If an attachment
+    is created in shareable mode, then other instances can attach the same volume, provided
+    that they also create their attachments in shareable mode. Only certain volume types can
+    be attached in shareable mode. Defaults to false if not specified.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'device': 'device', 'display_name': 'displayName', 'instance_id': 'instanceId', 'is_read_only': 'isReadOnly', 'is_shareable': 'isShareable', 'type': 'type', 'volume_id': 'volumeId'}
+    payload = {
+        "device": "device",
+        "display_name": "displayName",
+        "instance_id": "instanceId",
+        "is_read_only": "isReadOnly",
+        "is_shareable": "isShareable",
+        "type": "type",
+        "volume_id": "volumeId",
+    }
 
     ret = await hub.tool.oci.session.request(
         ctx,
         method="post",
-        path="/volumeAttachments/".format(
-            **{}
-        ),
+        path="/volumeAttachments/".format(**{}),
         query_params={},
         data=payload,
         headers={"opc-retry-token": opc_retry_token},
@@ -7565,46 +7632,44 @@ be attached in shareable mode. Defaults to false if not specified.
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'attachment_type': 'attachmentType',
-             'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'device': 'device',
-             'display_name': 'displayName',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'is_multipath': 'isMultipath',
-             'is_pv_encryption_in_transit_enabled': 'isPvEncryptionInTransitEnabled',
-             'is_read_only': 'isReadOnly',
-             'is_shareable': 'isShareable',
-             'iscsi_login_state': 'iscsiLoginState',
-             'lifecycle_state': 'lifecycleState',
-             'time_created': 'timeCreated',
-             'volume_id': 'volumeId'}
+        {
+            "attachment_type": "attachmentType",
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "device": "device",
+            "display_name": "displayName",
+            "id": "id",
+            "instance_id": "instanceId",
+            "is_multipath": "isMultipath",
+            "is_pv_encryption_in_transit_enabled": "isPvEncryptionInTransitEnabled",
+            "is_read_only": "isReadOnly",
+            "is_shareable": "isShareable",
+            "iscsi_login_state": "iscsiLoginState",
+            "lifecycle_state": "lifecycleState",
+            "time_created": "timeCreated",
+            "volume_id": "volumeId",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
-async def get_volume_attachment(
-    hub,
-    ctx,
-    volume_attachment_id: str
-) -> Dict[str, Any]:
+async def get_volume_attachment(hub, ctx, volume_attachment_id: str) -> Dict[str, Any]:
     r"""
-    
+
     GetVolumeAttachment
         Gets information about the specified volume attachment.
 
@@ -7616,7 +7681,6 @@ async def get_volume_attachment(
         Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -7639,35 +7703,37 @@ async def get_volume_attachment(
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'attachment_type': 'attachmentType',
-             'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'device': 'device',
-             'display_name': 'displayName',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'is_multipath': 'isMultipath',
-             'is_pv_encryption_in_transit_enabled': 'isPvEncryptionInTransitEnabled',
-             'is_read_only': 'isReadOnly',
-             'is_shareable': 'isShareable',
-             'iscsi_login_state': 'iscsiLoginState',
-             'lifecycle_state': 'lifecycleState',
-             'time_created': 'timeCreated',
-             'volume_id': 'volumeId'}
+        {
+            "attachment_type": "attachmentType",
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "device": "device",
+            "display_name": "displayName",
+            "id": "id",
+            "instance_id": "instanceId",
+            "is_multipath": "isMultipath",
+            "is_pv_encryption_in_transit_enabled": "isPvEncryptionInTransitEnabled",
+            "is_read_only": "isReadOnly",
+            "is_shareable": "isShareable",
+            "iscsi_login_state": "iscsiLoginState",
+            "lifecycle_state": "lifecycleState",
+            "time_created": "timeCreated",
+            "volume_id": "volumeId",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
@@ -7678,43 +7744,42 @@ async def update_volume_attachment(
     volume_attachment_id: str,
     opc_request_id: str = None,
     if_match: str = None,
-    iscsi_login_state: str = None
+    iscsi_login_state: str = None,
 ) -> Dict[str, Any]:
     r"""
-    
-    UpdateVolumeAttachment
-        Updates information about the specified volume attachment.
 
-    Args:
-        volume_attachment_id(str):
-            The OCID of the volume attachment.
+        UpdateVolumeAttachment
+            Updates information about the specified volume attachment.
 
-        opc_request_id(str, Optional):
-            Unique identifier for the request.
-If you need to contact Oracle about a particular request, please provide the request ID.
-. Defaults to None.
+        Args:
+            volume_attachment_id(str):
+                The OCID of the volume attachment.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+            opc_request_id(str, Optional):
+                Unique identifier for the request.
+    If you need to contact Oracle about a particular request, please provide the request ID.
+    . Defaults to None.
 
-        iscsi_login_state(str, Optional):
-            The iscsi login state of the volume attachment. For a multipath volume attachment,
-all iscsi sessions need to be all logged-in or logged-out to be in logged-in or logged-out state.
-. Defaults to None.
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
 
-    Returns:
-        Dict[str, Any]
+            iscsi_login_state(str, Optional):
+                The iscsi login state of the volume attachment. For a multipath volume attachment,
+    all iscsi sessions need to be all logged-in or logged-out to be in logged-in or logged-out state.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
     # TODO: Change request param mapping as necessary
-    payload = {'iscsi_login_state': 'iscsiLoginState'}
+    payload = {"iscsi_login_state": "iscsiLoginState"}
 
     ret = await hub.tool.oci.session.request(
         ctx,
@@ -7732,68 +7797,66 @@ all iscsi sessions need to be all logged-in or logged-out to be in logged-in or 
         result["result"] = False
         return result
 
-
     # Convert raw response into present format
     raw_resource = ret["ret"]
 
     resource_in_present_format = {}
     resource_parameters = OrderedDict(
-                {'attachment_type': 'attachmentType',
-             'availability_domain': 'availabilityDomain',
-             'compartment_id': 'compartmentId',
-             'device': 'device',
-             'display_name': 'displayName',
-             'id': 'id',
-             'instance_id': 'instanceId',
-             'is_multipath': 'isMultipath',
-             'is_pv_encryption_in_transit_enabled': 'isPvEncryptionInTransitEnabled',
-             'is_read_only': 'isReadOnly',
-             'is_shareable': 'isShareable',
-             'iscsi_login_state': 'iscsiLoginState',
-             'lifecycle_state': 'lifecycleState',
-             'time_created': 'timeCreated',
-             'volume_id': 'volumeId'}
+        {
+            "attachment_type": "attachmentType",
+            "availability_domain": "availabilityDomain",
+            "compartment_id": "compartmentId",
+            "device": "device",
+            "display_name": "displayName",
+            "id": "id",
+            "instance_id": "instanceId",
+            "is_multipath": "isMultipath",
+            "is_pv_encryption_in_transit_enabled": "isPvEncryptionInTransitEnabled",
+            "is_read_only": "isReadOnly",
+            "is_shareable": "isShareable",
+            "iscsi_login_state": "iscsiLoginState",
+            "lifecycle_state": "lifecycleState",
+            "time_created": "timeCreated",
+            "volume_id": "volumeId",
+        }
     )
 
     for parameter_raw, parameter_present in resource_parameters.items():
         if parameter_raw in raw_resource and raw_resource.get(parameter_raw):
-            resource_in_present_format[parameter_present] = raw_resource.get(parameter_raw)
+            resource_in_present_format[parameter_present] = raw_resource.get(
+                parameter_raw
+            )
 
     result["ret"] = resource_in_present_format
-
 
     return result
 
 
 async def detach_volume(
-    hub,
-    ctx,
-    volume_attachment_id: str,
-    if_match: str = None
+    hub, ctx, volume_attachment_id: str, if_match: str = None
 ) -> Dict[str, Any]:
     r"""
-    
-    DetachVolume
-        Detaches a storage volume from an instance. You must specify the OCID of the volume attachment.
 
-    This is an asynchronous operation. The attachment's `lifecycleState` will change to DETACHING temporarily
-    until the attachment is completely removed.
+        DetachVolume
+            Detaches a storage volume from an instance. You must specify the OCID of the volume attachment.
 
-    Args:
-        volume_attachment_id(str):
-            The OCID of the volume attachment.
+        This is an asynchronous operation. The attachment's `lifecycleState` will change to DETACHING temporarily
+        until the attachment is completely removed.
 
-        if_match(str, Optional):
-            For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
-parameter to the value of the etag from a previous GET or POST response for that resource. The resource
-will be updated or deleted only if the etag you provide matches the resource's current etag value.
-. Defaults to None.
+        Args:
+            volume_attachment_id(str):
+                The OCID of the volume attachment.
 
-    Returns:
-        Dict[str, Any]
+            if_match(str, Optional):
+                For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
+    parameter to the value of the etag from a previous GET or POST response for that resource. The resource
+    will be updated or deleted only if the etag you provide matches the resource's current etag value.
+    . Defaults to None.
+
+        Returns:
+            Dict[str, Any]
 
     """
-
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -7816,9 +7879,6 @@ will be updated or deleted only if the etag you provide matches the resource's c
         result["result"] = False
         return result
 
-
     result["ret"] = ret["ret"]
 
-
     return result
-

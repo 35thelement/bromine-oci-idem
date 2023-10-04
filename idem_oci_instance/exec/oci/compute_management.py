@@ -1,22 +1,14 @@
-
 """Exec module for managing Compute Managements. """
-
 from typing import Any
 from typing import Dict
-from typing import List
-from collections import OrderedDict
-from dataclasses import field
-from dataclasses import make_dataclass
-import dict_tools.differ as differ
 
-__contracts__ = ['soft_fail']
+__contracts__ = ["soft_fail"]
 
-__func_alias__ = {'list_': 'list'}
-
+__func_alias__ = {"list_": "list"}
 
 
 async def get(hub, ctx) -> Dict[str, Any]:
-    '''
+    """
 
     Returns:
         Dict[str, Any]
@@ -30,15 +22,14 @@ async def get(hub, ctx) -> Dict[str, Any]:
               exec.run:
                 - path: oci.compute_management.get
                 - kwargs:
-                  
+
 
         Exec call from the CLI:
 
         .. code-block:: bash
 
-            idem exec oci.compute_management.get 
-    '''
-
+            idem exec oci.compute_management.get
+    """
 
     result = dict(comment=[], ret=None, result=True)
 
@@ -46,9 +37,7 @@ async def get(hub, ctx) -> Dict[str, Any]:
     get = await hub.tool.oci.session.request(
         ctx,
         method="TODO",
-        path="TODO".format(
-            **{}
-        ),
+        path="TODO".format(**{}),
         query_params={},
         data={},
         headers={},
@@ -66,23 +55,18 @@ async def get(hub, ctx) -> Dict[str, Any]:
 
     # Case: Empty results
     if not get["ret"]:
-        result["comment"].append(
-            f"Get '{name}' result is empty"
-        )
+        result["comment"].append(f"Get '{name}' result is empty")
         return result
-
 
     # TODO: Make sure resource_id is mapped in get response
     get["ret"]["resource_id"] = resource_id
     result["ret"] = get["ret"]
 
-
     return result
 
 
-
 async def list_(hub, ctx) -> Dict[str, Any]:
-    '''
+    """
 
     Returns:
         Dict[str, Any]
@@ -97,13 +81,13 @@ async def list_(hub, ctx) -> Dict[str, Any]:
               exec.run:
                 - path: oci.compute_management.list
                 - kwargs:
-                  
+
 
         Exec call from the CLI:
 
         .. code-block:: bash
 
-            idem exec oci.compute_management.list 
+            idem exec oci.compute_management.list
 
         Describe call from the CLI:
 
@@ -111,9 +95,7 @@ async def list_(hub, ctx) -> Dict[str, Any]:
 
             $ idem describe oci.compute_management
 
-    '''
-
-
+    """
 
     result = dict(comment=[], ret=[], result=True)
 
@@ -141,9 +123,8 @@ async def list_(hub, ctx) -> Dict[str, Any]:
     return result
 
 
-
 async def create(hub, ctx) -> Dict[str, Any]:
-    '''
+    """
 
     Returns:
         Dict[str, Any]
@@ -155,15 +136,14 @@ async def create(hub, ctx) -> Dict[str, Any]:
 
             resource_is_present:
               oci.compute_management.present:
-                - 
+                -
 
         Exec call from the CLI:
 
         .. code-block:: bash
 
-            idem exec oci.compute_management.create 
-    '''
-
+            idem exec oci.compute_management.create
+    """
 
     result = dict(comment=[], ret=[], result=True)
 
@@ -195,16 +175,17 @@ async def create(hub, ctx) -> Dict[str, Any]:
         result["result"] = False
         return result
 
-    result["comment"].append(f"Created oci.compute_management '{name}'",)
+    result["comment"].append(
+        f"Created oci.compute_management '{name}'",
+    )
 
     result["ret"] = create["ret"]
     # TODO: add "resource_id" to returned response by mapping to correct resource identifier
     return result
 
 
-
 async def update(hub, ctx) -> Dict[str, Any]:
-    '''
+    """
 
     Returns:
         Dict[str, Any]
@@ -216,15 +197,14 @@ async def update(hub, ctx) -> Dict[str, Any]:
 
             resource_is_present:
               oci.compute_management.present:
-                - 
+                -
 
         Exec call from the CLI:
 
         .. code-block:: bash
 
-            idem exec oci.compute_management.update 
-    '''
-
+            idem exec oci.compute_management.update
+    """
 
     result = dict(comment=[], ret=[], result=True)
 
@@ -246,9 +226,7 @@ async def update(hub, ctx) -> Dict[str, Any]:
         update = await hub.tool.oci.session.request(
             ctx,
             method="TODO",
-            path="TODO".format(
-                **{}
-            ),
+            path="TODO".format(**{}),
             query_params={},
             data=payload,
             headers={},
@@ -260,14 +238,15 @@ async def update(hub, ctx) -> Dict[str, Any]:
             return result
 
         result["ret"] = update["ret"]
-        result["comment"].append(f"Updated oci.compute_management '{name}'",)
+        result["comment"].append(
+            f"Updated oci.compute_management '{name}'",
+        )
 
     return result
 
 
-
 async def delete(hub, ctx) -> Dict[str, Any]:
-    '''
+    """
 
     Returns:
         Dict[str, Any]
@@ -279,24 +258,21 @@ async def delete(hub, ctx) -> Dict[str, Any]:
 
             resource_is_absent:
               oci.compute_management.absent:
-                - 
+                -
 
         Exec call from the CLI:
 
         .. code-block:: bash
 
-            idem exec oci.compute_management.delete 
-    '''
-
+            idem exec oci.compute_management.delete
+    """
 
     result = dict(comment=[], ret=[], result=True)
 
     delete = await hub.tool.oci.session.request(
         ctx,
         method="TODO",
-        path="TODO".format(
-            **{}
-        ),
+        path="TODO".format(**{}),
         query_params={},
         data={},
         headers={},
@@ -309,5 +285,3 @@ async def delete(hub, ctx) -> Dict[str, Any]:
 
     result["comment"].append(f"Deleted '{name}'")
     return result
-
-

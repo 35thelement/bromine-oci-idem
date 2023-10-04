@@ -5,10 +5,11 @@ from datetime import datetime
 from typing import Any
 from typing import Dict
 from urllib import parse
-from urllib.parse import quote_plus, urlparse
+from urllib.parse import urlparse
 
 import aiohttp
-from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 
 
@@ -48,7 +49,7 @@ async def request(
         }
 
         payload = json.dumps(data)
-        headers = _headers(ctx, url, method, query_params, payload)
+        headers = _headers(ctx, url, method, query_params_sanitized, payload)
 
         async with session.request(
             url=url,
@@ -84,7 +85,7 @@ async def request(
 
 
 async def on_request_start(hub, session, trace_config_ctx, params):
-    print("Starting %s" % params)
+    hub.log.debug("Starting %s" % params)
 
 
 async def on_request_end(hub, session, trace_config_ctx, params):
@@ -97,10 +98,6 @@ def _headers(ctx, raw_url, method, query_params={}, payload=""):
     host = url_host.netloc
     path = url_host.path
 
-    path_with_query = parse.urlencode(query_params)
-    if path_with_query.endswith("?"):
-        path_with_query = path_with_query[:-1]
-
     # Current date
     # Note: Maximum clock skew is 5 minutes
     current_date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
@@ -108,7 +105,9 @@ def _headers(ctx, raw_url, method, query_params={}, payload=""):
     # Headers
     host_header = f"host: {host}"
     date_header = f"date: {current_date}"
-    escaped_target = quote_plus(path + path_with_query)
+    escaped_target = (
+        path + "?" + parse.urlencode(query_params) if query_params else path
+    )
     request_target_header = f"(request-target): {method} {escaped_target}"
 
     # Signing String
@@ -127,7 +126,9 @@ def _headers(ctx, raw_url, method, query_params={}, payload=""):
         base64_encoded_body_hash = base64.b64encode(body_hash).decode("utf-8")
         content_sha256_header = f"x-content-sha256: {base64_encoded_body_hash}"
 
-        signing_string_array.extend([content_sha256_header, content_type_header, content_length_header])
+        signing_string_array.extend(
+            [content_sha256_header, content_type_header, content_length_header]
+        )
 
         headers_to_sign.extend(["x-content-sha256", "content-type", "content-length"])
 
@@ -136,19 +137,23 @@ def _headers(ctx, raw_url, method, query_params={}, payload=""):
     signing_string = "\n".join(signing_string_array)
 
     # Generates OCI Signature for Authorization
-    private_key_bytes = ctx.acct.private_key.encode('utf-8')
+    private_key_bytes = ctx.acct.private_key.encode("utf-8")
 
-    if ctx.acct.passphrase is None or ctx.acct.passphrase == '':
-        private_key = serialization.load_pem_private_key(private_key_bytes, password=None)
+    if ctx.acct.passphrase is None or ctx.acct.passphrase == "":
+        private_key = serialization.load_pem_private_key(
+            private_key_bytes, password=None
+        )
     else:
-        private_key = serialization.load_pem_private_key(private_key_bytes, password=ctx.acct.passphrase.encode('utf-8'))
+        private_key = serialization.load_pem_private_key(
+            private_key_bytes, password=ctx.acct.passphrase.encode("utf-8")
+        )
 
-    signature = private_key.sign(signing_string.encode(), padding.PKCS1v15(), hashes.SHA256())
+    signature = private_key.sign(
+        signing_string.encode(), padding.PKCS1v15(), hashes.SHA256()
+    )
 
     base64_encoded_signature = base64.b64encode(signature).decode("utf-8")
     response = f'Signature version="1",keyId="{ctx.acct.api_key}",algorithm="rsa-sha256",headers="{headers}",signature="{base64_encoded_signature}"'
-
-    print(response)
     return {
         "Date": current_date,
         "Authorization": response,

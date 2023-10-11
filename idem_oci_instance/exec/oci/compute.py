@@ -232,7 +232,9 @@ async def create(
     hub,
     ctx,
     availability_domain: str,
+    image_id: str,
     shape: str,
+    subnet_id: str,
     opc_retry_token: str = None,
     compartment_id: str = None,
     agent_config: make_dataclass(
@@ -298,7 +300,6 @@ async def create(
     fault_domain: str = None,
     freeform_tags: Dict = None,
     hostname_label: str = None,
-    image_id: str = None,
     instance_options: make_dataclass(
         "instance_options",
         [("are_legacy_imds_endpoints_disabled", bool, field(default=None))],
@@ -341,7 +342,6 @@ async def create(
         ],
     ) = None,
     source_details: make_dataclass("source_details", [("source_type", str)]) = None,
-    subnet_id: str = None,
     name: str = None,
 ) -> Dict[str, Any]:
     """

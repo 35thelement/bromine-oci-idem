@@ -10,7 +10,7 @@ async def gather(hub, profiles) -> Dict[str, Any]:
         profile,
         ctx,
     ) in profiles.get("oci", {}).items():
-        endpoint_url = f"{ctx.get('endpoint_url').replace('{region_name}', ctx.get('region'))}{DEFAULT_ENDPOINT_URL}"
+        endpoint_url = f"{ctx.get('endpoint_url').replace('{region_name}', ctx.get('region')).rstrip(DEFAULT_ENDPOINT_URL)}{DEFAULT_ENDPOINT_URL}"
         sub_profiles[profile] = dict(
             endpoint_url=endpoint_url,
             compartment_id=ctx.get("compartment"),

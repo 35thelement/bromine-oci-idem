@@ -802,7 +802,7 @@ async def present(
             result["comment"] = (f"Would create oci.compute: {name}",)
             return result
         else:
-            create_ret = await hub.exec.oci.compute.create(ctx, **{})
+            create_ret = await hub.exec.oci.compute.create(ctx, **desired_state)
             result["result"] = create_ret["result"]
 
             if result["result"]:

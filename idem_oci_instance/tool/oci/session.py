@@ -1,6 +1,8 @@
 import base64
 import hashlib
 import json
+import httpsig_cffi.sign
+import six
 from datetime import datetime
 from typing import Any
 from typing import Dict
@@ -111,26 +113,26 @@ def _headers(ctx, raw_url, method, query_params={}, payload=""):
     request_target_header = f"(request-target): {method} {escaped_target}"
 
     # Signing String
-    signing_string_array = [request_target_header, date_header, host_header]
+    signing_string_array = [date_header, request_target_header, host_header]
 
-    headers_to_sign = ["(request-target)", "date", "host"]
+    headers_to_sign = ["date", "(request-target)", "host"]
 
     # Handles requests with body (POST, PUT, and PATCH)
     methods_that_require_extra_headers = ["POST", "PUT", "PATCH"]
     if method.upper() in methods_that_require_extra_headers:
-        body = payload
-        content_length_header = f"content-length: {len(body.encode())}"
-        content_type_header = "content-type: application/json"
-
-        body_hash = hashlib.sha256(body.encode()).digest()
+        body = payload.encode("utf-8")
+        body_hash = hashlib.sha256(body).digest()
         base64_encoded_body_hash = base64.b64encode(body_hash).decode("utf-8")
         content_sha256_header = f"x-content-sha256: {base64_encoded_body_hash}"
-
         signing_string_array.extend(
-            [content_sha256_header, content_type_header, content_length_header]
+            [
+                f"content-length: {len(body)}",
+                "content-type: application/json",
+                content_sha256_header,
+            ]
         )
 
-        headers_to_sign.extend(["x-content-sha256", "content-type", "content-length"])
+        headers_to_sign.extend(["content-length", "content-type", "x-content-sha256"])
 
     # Joins
     headers = " ".join(headers_to_sign)
@@ -154,7 +156,13 @@ def _headers(ctx, raw_url, method, query_params={}, payload=""):
 
     base64_encoded_signature = base64.b64encode(signature).decode("utf-8")
     response = f'Signature version="1",keyId="{ctx.acct.api_key}",algorithm="rsa-sha256",headers="{headers}",signature="{base64_encoded_signature}"'
-    return {
+    header_dict = {
         "Date": current_date,
         "Authorization": response,
     }
+
+    if method.upper() in methods_that_require_extra_headers:
+        header_dict["Content-Type"] = "application/json"
+        header_dict["x-content-sha256"] = base64_encoded_body_hash
+
+    return header_dict

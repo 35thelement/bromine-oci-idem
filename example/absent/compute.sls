@@ -1,3 +1,5 @@
 idem_test_compute_is_absent:
   oci.compute.absent:
-  - resource_id: value
+  - instance_id: string
+  - if_match: string
+  - preserve_boot_volume: bool

@@ -146,7 +146,6 @@ Create new branch for changes to submit:
 
     git checkout -b amazing-feature
 
-
 Set up your local preview environment
 =====================================
 
@@ -175,6 +174,22 @@ From within your local copy of the forked repo:
     # Setup pre-commit
     pre-commit install
 
+
+Code generation
+===============
+
+This plugin is auto-generated using `pop-create-idem` and Oracle
+Cloud API swagger doc. Oracle Cloud API have non-standard names for CRUD operations for compute resource type. Idem plugin exec and state
+functions are resolved during code generation using a `pop-create-idem` customisation spec that can be found here: <root dir>/idem_oci_instance/cloudspec/customize/oci.py
+
+.. code-block:: bash
+
+    pop-create swagger --directory <output dir>/bromine-idem-oci --specification=<swagger dir>/swagger_doc.yaml --project-name=idem-oci-instance --author "Oracle Corp." --cloud "oci" --overwrite-existing
+
+
+.. note::
+    Make sure you install the plugin code in the venv before executing pop-create command to install
+    auto-gent customisation spec that is used by pop-create.
 
 ``pre-commit`` and ``nox`` Setup
 --------------------------------

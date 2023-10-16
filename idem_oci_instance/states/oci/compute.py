@@ -921,7 +921,6 @@ async def present(
             create_ret = await hub.exec.oci.compute.create(
                 ctx,
                 **{
-                    "resource_id": resource_id,
                     "name": name,
                     "agent_config": agent_config,
                     "availability_config": availability_config,

@@ -18,7 +18,7 @@ async def present(
     compartment_id: str,
     shape: str,
     image_id: str,
-    subnet_id: str,
+    subnet_id: str = None,
     resource_id: str = None,
     opc_retry_token: str = None,
     agent_config: make_dataclass(

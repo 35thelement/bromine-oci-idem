@@ -6366,6 +6366,7 @@ async def launch_instance(
     availability_domain: str,
     compartment_id: str,
     shape: str,
+    subnet_id: str,
     opc_retry_token: str = None,
     agent_config: make_dataclass(
         "agent_config",
@@ -6473,7 +6474,6 @@ async def launch_instance(
         ],
     ) = None,
     source_details: make_dataclass("source_details", [("source_type", str)]) = None,
-    subnet_id: str = None,
 ) -> Dict[str, Any]:
     r"""
 

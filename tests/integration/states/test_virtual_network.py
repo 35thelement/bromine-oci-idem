@@ -28,7 +28,7 @@ async def test_describe(hub, ctx):
     resource_id = PARAMETER["resource_id"]
     assert resource_id in ret
     assert "oci.virtual_network.present" in ret[resource_id]
-    ret[resource_id].get("oci.virtual_network.present")
+    described_resource = ret[resource_id].get("oci.virtual_network.present")
     # TODO: Add manual verification as necessary
 
 

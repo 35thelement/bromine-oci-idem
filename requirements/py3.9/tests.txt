@@ -8,15 +8,13 @@ acct==8.6.2
     # via
     #   idem
     #   pop-evbus
-aiodns==3.0.0
-    # via aiohttp
 aiofiles==23.2.1
     # via
     #   acct
     #   dict-toolbox
     #   idem
     #   pop-tree
-aiohttp[speedups]==3.8.4
+aiohttp==3.8.4
     # via
     #   idem-aiohttp
     #   idem-oci-instance
@@ -30,14 +28,8 @@ asynctest==0.13.0
     # via -r requirements/tests.in
 attrs==23.1.0
     # via aiohttp
-brotli==1.1.0
-    # via aiohttp
-cchardet==2.1.7
-    # via aiohttp
 cffi==1.16.0
-    # via
-    #   cryptography
-    #   pycares
+    # via cryptography
 charset-normalizer==3.3.0
     # via aiohttp
 colorama==0.4.6
@@ -145,8 +137,6 @@ pop==26.0.4
     #   pop-tree
     #   pytest-pop
     #   rend
-pycares==4.3.0
-    # via aiodns
 pycparser==2.21
     # via cffi
 pyopenssl==21.0.0

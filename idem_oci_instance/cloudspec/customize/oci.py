@@ -46,4 +46,30 @@ def run(hub, ctx):
             }
         }
     """
-    # TODO: Replace with custom logic
+
+    if ctx.cloud_spec.get("plugins", {}).get("compute", {}).get:
+        compute_plugin_functions = ctx.cloud_spec["plugins"]["compute"]["functions"]
+        if compute_plugin_functions.get("get_instance"):
+            compute_plugin_functions["get"] = compute_plugin_functions["get_instance"]
+        if compute_plugin_functions.get("list_instances"):
+            compute_plugin_functions["list"] = compute_plugin_functions[
+                "list_instances"
+            ]
+        if compute_plugin_functions.get("launch_instance"):
+            compute_plugin_functions["create"] = compute_plugin_functions[
+                "launch_instance"
+            ]
+            compute_plugin_functions["present"] = compute_plugin_functions[
+                "launch_instance"
+            ]
+        if compute_plugin_functions.get("update_instance"):
+            compute_plugin_functions["update"] = compute_plugin_functions[
+                "update_instance"
+            ]
+        if compute_plugin_functions.get("terminate_instance"):
+            compute_plugin_functions["delete"] = compute_plugin_functions[
+                "terminate_instance"
+            ]
+            compute_plugin_functions["absent"] = compute_plugin_functions[
+                "terminate_instance"
+            ]

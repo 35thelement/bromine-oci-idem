@@ -232,11 +232,12 @@ async def create(
     hub,
     ctx,
     availability_domain: str,
-    image_id: str,
+    compartment_id: str,
     shape: str,
+    image_id: str,
     subnet_id: str,
+    name: str = None,
     opc_retry_token: str = None,
-    compartment_id: str = None,
     agent_config: make_dataclass(
         "agent_config",
         [
@@ -342,10 +343,10 @@ async def create(
         ],
     ) = None,
     source_details: make_dataclass("source_details", [("source_type", str)]) = None,
-    name: str = None,
 ) -> Dict[str, Any]:
     """
-    Creates a new instance in the specified compartment and the specified availability domain.
+    LaunchInstance
+        Creates a new instance in the specified compartment and the specified availability domain.
     For general information about instances, see
     [Overview of the Compute Service](/iaas/Content/Compute/Concepts/computeoverview.htm).
 
@@ -391,14 +392,22 @@ async def create(
 
     Args:
         availability_domain(str):
-            The availability domain of the instance. Example: `Uocm:PHX-AD-1` .
+            The availability domain of the instance.
+
+            Example: `Uocm:PHX-AD-1`
+
 
         compartment_id(str):
             The OCID of the compartment.
 
         shape(str):
-            The shape of an instance. The shape determines the number of CPUs, amount of memory, and other resources allocated to the instance.
+            The shape of an instance. The shape determines the number of CPUs, amount of memory,
+            and other resources allocated to the instance.
+
             You can enumerate all available shapes by calling [ListShapes](#/en/iaas/latest/Shape/ListShapes).
+
+        name(str, Optional):
+            Idem name of the resource. Defaults to None.
 
         opc_retry_token(str, Optional):
             A token that uniquely identifies a request so it can be retried in case of a timeout or
@@ -406,7 +415,7 @@ async def create(
             hours, but can be invalidated before then due to conflicting operations (for example, if a resource
             has been deleted and purged from the system, then a retry of the original creation request
             may be rejected).
-            . Defaults to None.
+            Defaults to None.
 
         agent_config(dict[str, Any], Optional):
             agentConfig. Defaults to None.
@@ -419,7 +428,7 @@ async def create(
                 [ListInstanceagentAvailablePlugins](#/en/instanceagent/20180530/Plugin/ListInstanceagentAvailablePlugins)
                 operation in the Oracle Cloud Agent API. For more information about the available plugins, see
                 [Managing Plugins with Oracle Cloud Agent](/iaas/Content/Compute/Tasks/manage-plugins.htm).
-
+                Defaults to None.
 
             * is_management_disabled (bool, Optional):
                 Whether Oracle Cloud Agent can run all the available management plugins.
@@ -436,7 +445,7 @@ async def create(
                 - If `isManagementDisabled` is false, all of the management plugins are enabled. You
                 can optionally disable individual management plugins by providing a value in the `pluginsConfig`
                 object.
-
+                Defaults to None.
 
             * is_monitoring_disabled (bool, Optional):
                 Whether Oracle Cloud Agent can gather performance metrics and monitor the instance using the
@@ -453,10 +462,10 @@ async def create(
                 - If `isMonitoringDisabled` is false, all of the monitoring plugins are enabled. You
                 can optionally disable individual monitoring plugins by providing a value in the `pluginsConfig`
                 object.
-
+                Defaults to None.
 
             * plugins_config (List[dict[str, Any]], Optional):
-                The configuration of plugins associated with this instance.
+                The configuration of plugins associated with this instance. Defaults to None.
 
                 * desired_state (str):
                     Whether the plugin should be enabled or disabled.
@@ -479,25 +488,25 @@ async def create(
                 Whether to live migrate supported VM instances to a healthy physical VM host without
                 disrupting running instances during infrastructure maintenance events. If null, Oracle
                 chooses the best option for migrating the VM during infrastructure maintenance events.
-
+                Defaults to None.
 
             * recovery_action (str, Optional):
                 The lifecycle state for an instance when it is recovered after infrastructure maintenance.
                 * `RESTORE_INSTANCE` - The instance is restored to the lifecycle state it was in before the maintenance event.
                 If the instance was running, it is automatically rebooted. This is the default action when a value is not set.
                 * `STOP_INSTANCE` - The instance is recovered in the stopped state.
-
+                Defaults to None.
 
         capacity_reservation_id(str, Optional):
             The OCID of the compute capacity reservation this instance is launched under.
             You can opt out of all default reservations by specifying an empty string as input for this field.
             For more information, see [Capacity Reservations](/iaas/Content/Compute/Tasks/reserve-capacity.htm#default).
-            . Defaults to None.
+            Defaults to None.
 
         compute_cluster_id(str, Optional):
             The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the
             [compute cluster](/iaas/Content/Compute/Tasks/compute-clusters.htm) that the instance will be created in.
-            . Defaults to None.
+            Defaults to None.
 
         create_vnic_details(dict[str, Any], Optional):
             createVnicDetails. Defaults to None.
@@ -508,7 +517,7 @@ async def create(
                 (`ipv6SubnetCidr`) of your choice to assign the IPv6 address from. If `ipv6SubnetCidr`
                 is not provided then an IPv6 prefix is chosen
                 for you.
-
+                Defaults to None.
 
             * assign_private_dns_record (bool, Optional):
                 Whether the VNIC should be assigned a DNS record. If set to false, there will be no DNS record
@@ -516,7 +525,7 @@ async def create(
                 value is true.
 
                 If you specify a `hostnameLabel`, then `assignPrivateDnsRecord` must be set to true.
-
+                Defaults to None.
 
             * assign_public_ip (bool, Optional):
                 Whether the VNIC should be assigned a public IP address. Defaults to whether
@@ -542,26 +551,26 @@ async def create(
 
                 If you specify a `vlanId`, then `assignPublicIp` must be set to false. See
                 [Vlan](#/en/iaas/latest/Vlan).
-
+                Defaults to None.
 
             * defined_tags (Dict, Optional):
                 Defined tags for this resource. Each key is predefined and scoped to a
                 namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
                 Example: `{"Operations": {"CostCenter": "42"}}`
-
+                Defaults to None.
 
             * display_name (str, Optional):
                 A user-friendly name. Does not have to be unique, and it's changeable.
                 Avoid entering confidential information.
-
+                Defaults to None.
 
             * freeform_tags (Dict, Optional):
                 Free-form tags for this resource. Each tag is a simple key-value pair with no
                 predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
                 Example: `{"Department": "Finance"}`
-
+                Defaults to None.
 
             * hostname_label (str, Optional):
                 The hostname for the VNIC's primary private IP. Used for DNS. The value is the hostname
@@ -587,25 +596,25 @@ async def create(
 
                 If you specify a `vlanId`, the `hostnameLabel` cannot be specified. VNICs on a VLAN
                 can not be assigned a hostname. See [Vlan](#/en/iaas/latest/Vlan).
-
+                Defaults to None.
 
             * ipv6_address_ipv6_subnet_cidr_pair_details (List[dict[str, Any]], Optional):
                 A list of IPv6 prefix ranges from which the VNIC is assigned an IPv6 address.
                 You can provide only the prefix ranges from which OCI selects an available
                 address from the range. You can optionally choose to leave the prefix range empty
                 and instead provide the specific IPv6 address within that range to use.
-
+                Defaults to None.
 
                 * ipv6_address (str, Optional):
                     An IPv6 address of your choice. Must be an available IPv6 address within the subnet's prefix.
                     If an IPv6 address is not provided:
                     - Oracle will automatically assign an IPv6 address from the subnet's IPv6 prefix if and only if there is only one IPv6 prefix on the subnet.
                     - Oracle will automatically assign an IPv6 address from the subnet's IPv6 Oracle GUA prefix if it exists on the subnet.
-
+                    Defaults to None.
 
                 * ipv6_subnet_cidr (str, Optional):
                     The IPv6 prefix allocated to the subnet.
-
+                    Defaults to None.
 
             * nsg_ids (List[str], Optional):
                 A list of the OCIDs of the network security groups (NSGs) to add the VNIC to. For more
@@ -616,7 +625,7 @@ async def create(
                 indicates that the VNIC will belong to a VLAN instead of a subnet. With VLANs,
                 all VNICs in the VLAN belong to the NSGs that are associated with the VLAN.
                 See [Vlan](#/en/iaas/latest/Vlan).
-
+                Defaults to None.
 
             * private_ip (str, Optional):
                 A private IP address of your choice to assign to the VNIC. Must be an
@@ -633,7 +642,7 @@ async def create(
                 See [Vlan](#/en/iaas/latest/Vlan).
 
                 Example: `10.0.3.3`
-
+                Defaults to None.
 
             * skip_source_dest_check (bool, Optional):
                 Whether the source/destination check is disabled on the VNIC.
@@ -647,7 +656,7 @@ async def create(
                 [Vlan](#/en/iaas/latest/Vlan).
 
                 Example: `true`
-
+                Defaults to None.
 
             * subnet_id (str, Optional):
                 The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the subnet to create the VNIC in. When launching an instance,
@@ -658,7 +667,7 @@ async def create(
                 If you are an Oracle Cloud VMware Solution customer and creating a secondary
                 VNIC in a VLAN instead of a subnet, provide a `vlanId` instead of a `subnetId`.
                 If you provide both a `vlanId` and `subnetId`, the request fails.
-
+                Defaults to None.
 
             * vlan_id (str, Optional):
                 Provide this attribute only if you are an Oracle Cloud VMware Solution
@@ -667,23 +676,23 @@ async def create(
 
                 Provide a `vlanId` instead of a `subnetId`. If you provide both a
                 `vlanId` and `subnetId`, the request fails.
-
+                Defaults to None.
 
         dedicated_vm_host_id(str, Optional):
             The OCID of the dedicated virtual machine host to place the instance on.
-            . Defaults to None.
+            Defaults to None.
 
         defined_tags(Dict, Optional):
             Defined tags for this resource. Each key is predefined and scoped to a
             namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
             Example: `{"Operations": {"CostCenter": "42"}}`
-            . Defaults to None.
+            Defaults to None.
 
         display_name(str, Optional):
             A user-friendly name. Does not have to be unique, and it's changeable.
             Avoid entering confidential information.
-            . Defaults to None.
+            Defaults to None.
 
         extended_metadata(Dict, Optional):
             Additional metadata key/value pairs that you provide. They serve the same purpose and
@@ -694,7 +703,7 @@ async def create(
 
             The combined size of the `metadata` and `extendedMetadata` objects can be a maximum of
             32,000 bytes.
-            . Defaults to None.
+            Defaults to None.
 
         fault_domain(str, Optional):
             A fault domain is a grouping of hardware and infrastructure within an availability domain.
@@ -711,34 +720,34 @@ async def create(
             Identity and Access Management Service API.
 
             Example: `FAULT-DOMAIN-1`
-            . Defaults to None.
+            Defaults to None.
 
         freeform_tags(Dict, Optional):
             Free-form tags for this resource. Each tag is a simple key-value pair with no
             predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
             Example: `{"Department": "Finance"}`
-            . Defaults to None.
+            Defaults to None.
 
-                    hostname_label(str, Optional):
-                        Deprecated. Instead use `hostnameLabel` in
+        hostname_label(str, Optional):
+            Deprecated. Instead use `hostnameLabel` in
             [CreateVnicDetails](#/en/iaas/latest/CreateVnicDetails/).
             If you provide both, the values must match.
-            . Defaults to None.
+            Defaults to None.
 
         image_id(str, Optional):
             Deprecated. Use `sourceDetails` with [InstanceSourceViaImageDetails](#/en/iaas/latest/requests/InstanceSourceViaImageDetails)
             source type instead. If you specify values for both, the values must match.
-            . Defaults to None.
+            Defaults to None.
 
-                    instance_options(dict[str, Any], Optional):
-                        instanceOptions. Defaults to None.
+        instance_options(dict[str, Any], Optional):
+            instanceOptions. Defaults to None.
 
-                        * are_legacy_imds_endpoints_disabled (bool, Optional):
-                            Whether to disable the legacy (/v1) instance metadata service endpoints.
-            Customers who have migrated to /v2 should set this to true for added security.
-            Default is false.
-
+            * are_legacy_imds_endpoints_disabled (bool, Optional):
+                Whether to disable the legacy (/v1) instance metadata service endpoints.
+                Customers who have migrated to /v2 should set this to true for added security.
+                Default is false.
+                Defaults to None.
 
         ipxe_script(str, Optional):
             This is an advanced option.
@@ -771,7 +780,7 @@ async def create(
             [Bring Your Own Image](/iaas/Content/Compute/References/bringyourownimage.htm).
 
             For more information about iPXE, see http://ipxe.org.
-            . Defaults to None.
+            Defaults to None.
 
         is_pv_encryption_in_transit_enabled(bool, Optional):
             Whether to enable in-transit encryption for the data volume's paravirtualized attachment. This field applies to both block volumes and boot volumes. The default value is false. Defaults to None.
@@ -782,21 +791,21 @@ async def create(
             * `EMULATED` - VM instances launch with emulated devices, such as the E1000 network driver and emulated SCSI disk controller.
             * `PARAVIRTUALIZED` - VM instances launch with paravirtualized devices using VirtIO drivers.
             * `CUSTOM` - VM instances launch with custom configuration settings specified in the `LaunchOptions` parameter.
-            . Defaults to None.
+            Defaults to None.
 
-                    launch_options(dict[str, Any], Optional):
-                        launchOptions. Defaults to None.
+        launch_options(dict[str, Any], Optional):
+            launchOptions. Defaults to None.
 
-                        * boot_volume_type (str, Optional):
-                            Emulation type for the boot volume.
-            * `ISCSI` - ISCSI attached block storage device.
-            * `SCSI` - Emulated SCSI disk.
-            * `IDE` - Emulated IDE disk.
-            * `VFIO` - Direct attached Virtual Function storage. This is the default option for local data
-            volumes on platform images.
-            * `PARAVIRTUALIZED` - Paravirtualized disk. This is the default for boot volumes and remote block
-            storage volumes on platform images.
-
+            * boot_volume_type (str, Optional):
+                Emulation type for the boot volume.
+                * `ISCSI` - ISCSI attached block storage device.
+                * `SCSI` - Emulated SCSI disk.
+                * `IDE` - Emulated IDE disk.
+                * `VFIO` - Direct attached Virtual Function storage. This is the default option for local data
+                volumes on platform images.
+                * `PARAVIRTUALIZED` - Paravirtualized disk. This is the default for boot volumes and remote block
+                storage volumes on platform images.
+                Defaults to None.
 
             * firmware (str, Optional):
                 Firmware used to boot VM. Select the option that matches your operating system.
@@ -804,15 +813,15 @@ async def create(
                 systems that boot using MBR style bootloaders.
                 * `UEFI_64` - Boot VM using UEFI style firmware compatible with 64 bit operating systems. This is the
                 default for platform images.
-
+                Defaults to None.
 
             * is_consistent_volume_naming_enabled (bool, Optional):
-                Whether to enable consistent volume naming feature. Defaults to false.
+                Whether to enable consistent volume naming feature. Defaults to false. Defaults to None.
 
             * is_pv_encryption_in_transit_enabled (bool, Optional):
                 Deprecated. Instead use `isPvEncryptionInTransitEnabled` in
                 [LaunchInstanceDetails](#/en/iaas/latest/datatypes/LaunchInstanceDetails).
-
+                Defaults to None.
 
             * network_type (str, Optional):
                 Emulation type for the physical network interface card (NIC).
@@ -820,7 +829,7 @@ async def create(
                 * `VFIO` - Direct attached Virtual Function network controller. This is the networking type
                 when you launch an instance using hardware-assisted (SR-IOV) networking.
                 * `PARAVIRTUALIZED` - VM instances launch with paravirtualized devices using VirtIO drivers.
-
+                Defaults to None.
 
             * remote_data_volume_type (str, Optional):
                 Emulation type for volume.
@@ -831,7 +840,7 @@ async def create(
                 volumes on platform images.
                 * `PARAVIRTUALIZED` - Paravirtualized disk. This is the default for boot volumes and remote block
                 storage volumes on platform images.
-
+                Defaults to None.
 
         metadata(Dict, Optional):
             Custom metadata key/value pairs that you provide, such as the SSH public key
@@ -882,22 +891,22 @@ async def create(
              the metadata information for the specified key name, respectively.
 
              The combined size of the `metadata` and `extendedMetadata` objects can be a maximum of 32,000 bytes.
-            . Defaults to None.
+            Defaults to None.
 
         platform_config(dict[str, Any], Optional):
             platformConfig. Defaults to None.
 
             * is_measured_boot_enabled (bool, Optional):
                 Whether the Measured Boot feature is enabled on the instance.
-
+                Defaults to None.
 
             * is_secure_boot_enabled (bool, Optional):
                 Whether Secure Boot is enabled on the instance.
-
+                Defaults to None.
 
             * is_trusted_platform_module_enabled (bool, Optional):
                 Whether the Trusted Platform Module (TPM) is enabled on the instance.
-
+                Defaults to None.
 
             * type (str):
                 The type of platform being configured.
@@ -907,7 +916,7 @@ async def create(
             preemptibleInstanceConfig. Defaults to None.
 
             * preemption_action (dict[str, Any]):
-                preemptionAction
+                preemptionAction.
 
                 * type (str):
                     The type of action to run when the instance is interrupted for eviction.
@@ -923,19 +932,19 @@ async def create(
                 - `BASELINE_1_8` - baseline usage is 1/8 of an OCPU.
                 - `BASELINE_1_2` - baseline usage is 1/2 of an OCPU.
                 - `BASELINE_1_1` - baseline usage is an entire OCPU. This represents a non-burstable instance.
-
+                Defaults to None.
 
             * memory_in_g_bs (float, Optional):
                 The total amount of memory available to the instance, in gigabytes.
-
+                Defaults to None.
 
             * nvmes (int, Optional):
                 The number of NVMe drives to be used for storage. A single drive has 6.8 TB available.
-
+                Defaults to None.
 
             * ocpus (float, Optional):
                 The total number of OCPUs available to the instance.
-
+                Defaults to None.
 
         source_details(dict[str, Any], Optional):
             sourceDetails. Defaults to None.
@@ -950,10 +959,27 @@ async def create(
             Deprecated. Instead use `subnetId` in
             [CreateVnicDetails](#/en/iaas/latest/CreateVnicDetails/).
             At least one of them is required; if you provide both, the values must match.
-            . Defaults to None.
+            Defaults to None.
 
     Returns:
         Dict[str, Any]
+
+    Examples:
+        Using in a state:
+
+        .. code-block:: sls
+
+            resource_is_present:
+              oci.compute.present:
+                - availability_domain: value
+                - compartment_id: value
+                - shape: value
+
+        Exec call from the CLI:
+
+        .. code-block:: bash
+
+            idem exec oci.compute.create availability_domain=value, compartment_id=value, shape=value
     """
 
     result = dict(comment=[], ret=[], result=True)
@@ -1100,19 +1126,22 @@ async def update(
         resource_id(str):
             The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
 
+        name(str, Optional):
+            Idem name of the resource. Defaults to None.
+
         opc_retry_token(str, Optional):
             A token that uniquely identifies a request so it can be retried in case of a timeout or
             server error without risk of executing that same action again. Retry tokens expire after 24
             hours, but can be invalidated before then due to conflicting operations (for example, if a resource
             has been deleted and purged from the system, then a retry of the original creation request
             may be rejected).
-            . Defaults to None.
+            Defaults to None.
 
         if_match(str, Optional):
             For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
             parameter to the value of the etag from a previous GET or POST response for that resource. The resource
             will be updated or deleted only if the etag you provide matches the resource's current etag value.
-            . Defaults to None.
+            Defaults to None.
 
         agent_config(dict[str, Any], Optional):
             agentConfig. Defaults to None.
@@ -1125,7 +1154,7 @@ async def update(
                 [ListInstanceagentAvailablePlugins](#/en/instanceagent/20180530/Plugin/ListInstanceagentAvailablePlugins)
                 operation in the Oracle Cloud Agent API. For more information about the available plugins, see
                 [Managing Plugins with Oracle Cloud Agent](/iaas/Content/Compute/Tasks/manage-plugins.htm).
-
+                Defaults to None.
 
             * is_management_disabled (bool, Optional):
                 Whether Oracle Cloud Agent can run all the available management plugins.
@@ -1141,7 +1170,7 @@ async def update(
                 - If `isManagementDisabled` is false, all of the management plugins are enabled. You
                 can optionally disable individual management plugins by providing a value in the `pluginsConfig`
                 object.
-
+                Defaults to None.
 
             * is_monitoring_disabled (bool, Optional):
                 Whether Oracle Cloud Agent can gather performance metrics and monitor the instance using the
@@ -1158,10 +1187,10 @@ async def update(
                 - If `isMonitoringDisabled` is false, all of the monitoring plugins are enabled. You
                 can optionally disable individual monitoring plugins by providing a value in the `pluginsConfig`
                 object.
-
+                Defaults to None.
 
             * plugins_config (List[dict[str, Any]], Optional):
-                The configuration of plugins associated with this instance.
+                The configuration of plugins associated with this instance. Defaults to None.
 
                 * desired_state (str):
                     Whether the plugin should be enabled or disabled.
@@ -1184,32 +1213,32 @@ async def update(
                 Whether to live migrate supported VM instances to a healthy physical VM host without
                 disrupting running instances during infrastructure maintenance events. If null, Oracle
                 chooses the best option for migrating the VM during infrastructure maintenance events.
-
+                Defaults to None.
 
             * recovery_action (str, Optional):
                 The lifecycle state for an instance when it is recovered after infrastructure maintenance.
                 * `RESTORE_INSTANCE` - The instance is restored to the lifecycle state it was in before the maintenance event.
                 If the instance was running, it is automatically rebooted. This is the default action when a value is not set.
                 * `STOP_INSTANCE` - The instance is recovered in the stopped state.
-
+                Defaults to None.
 
         capacity_reservation_id(str, Optional):
             The OCID of the compute capacity reservation this instance is launched under.
             You can remove the instance from a reservation by specifying an empty string as input for this field.
             For more information, see [Capacity Reservations](/iaas/Content/Compute/Tasks/reserve-capacity.htm#default).
-            . Defaults to None.
+            Defaults to None.
 
         defined_tags(Dict, Optional):
             Defined tags for this resource. Each key is predefined and scoped to a
             namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
             Example: `{"Operations": {"CostCenter": "42"}}`
-            . Defaults to None.
+            Defaults to None.
 
         display_name(str, Optional):
             A user-friendly name. Does not have to be unique, and it's changeable.
             Avoid entering confidential information.
-            . Defaults to None.
+            Defaults to None.
 
         extended_metadata(Dict, Optional):
             Additional metadata key/value pairs that you provide. They serve the same purpose and
@@ -1225,7 +1254,7 @@ async def update(
 
             The combined size of the `metadata` and `extendedMetadata` objects can be a maximum of
             32,000 bytes.
-            . Defaults to None.
+            Defaults to None.
 
         fault_domain(str, Optional):
             A fault domain is a grouping of hardware and infrastructure within an availability domain.
@@ -1239,14 +1268,14 @@ async def update(
             Identity and Access Management Service API.
 
             Example: `FAULT-DOMAIN-1`
-            . Defaults to None.
+            Defaults to None.
 
         freeform_tags(Dict, Optional):
             Free-form tags for this resource. Each tag is a simple key-value pair with no
             predefined name, type, or namespace. For more information, see [Resource Tags](/iaas/Content/General/Concepts/resourcetags.htm).
 
             Example: `{"Department": "Finance"}`
-            . Defaults to None.
+            Defaults to None.
 
         instance_options(dict[str, Any], Optional):
             instanceOptions. Defaults to None.
@@ -1255,7 +1284,7 @@ async def update(
                 Whether to disable the legacy (/v1) instance metadata service endpoints.
                 Customers who have migrated to /v2 should set this to true for added security.
                 Default is false.
-
+                Defaults to None.
 
         launch_options(dict[str, Any], Optional):
             launchOptions. Defaults to None.
@@ -1274,7 +1303,7 @@ async def update(
                 **Note:** Some instances might not function properly if you change the boot volume attachment type. After
                 the instance reboots and is running, connect to it. If the connection fails or the OS doesn't behave
                 as expected, the changes are not supported. Revert the instance to the original boot volume attachment type.
-
+                Defaults to None.
 
             * is_pv_encryption_in_transit_enabled (bool, Optional):
                 Whether to enable in-transit encryption for the volume's paravirtualized attachment.
@@ -1288,7 +1317,7 @@ async def update(
                 All boot volumes and block volumes are encrypted at rest.
 
                 For more information, see [Block Volume Encryption](/iaas/Content/Block/Concepts/overview.htm#Encrypti).
-
+                Defaults to None.
 
             * network_type (str, Optional):
                 Emulation type for the physical network interface card (NIC).
@@ -1307,7 +1336,7 @@ async def update(
                 **Note:** Some instances might not function properly if you change the networking type. After
                 the instance reboots and is running, connect to it. If the connection fails or the OS doesn't behave
                 as expected, the changes are not supported. Revert the instance to the original networking type.
-
+                Defaults to None.
 
         metadata(Dict, Optional):
             Custom metadata key/value string pairs that you provide. Any set of key/value pairs
@@ -1321,7 +1350,7 @@ async def update(
 
             The combined size of the `metadata` and `extendedMetadata` objects can be a maximum of
             32,000 bytes.
-            . Defaults to None.
+            Defaults to None.
 
         shape(str, Optional):
             The shape of the instance. The shape determines the number of CPUs and the amount of memory
@@ -1343,7 +1372,7 @@ async def update(
             If the instance is running when you change the shape, the instance is rebooted.
 
             Example: `VM.Standard2.1`
-            . Defaults to None.
+            Defaults to None.
 
         shape_config(dict[str, Any], Optional):
             shapeConfig. Defaults to None.
@@ -1356,19 +1385,19 @@ async def update(
                 - `BASELINE_1_8` - baseline usage is 1/8 of an OCPU.
                 - `BASELINE_1_2` - baseline usage is 1/2 of an OCPU.
                 - `BASELINE_1_1` - baseline usage is an entire OCPU. This represents a non-burstable instance.
-
+                Defaults to None.
 
             * memory_in_g_bs (float, Optional):
                 The total amount of memory available to the instance, in gigabytes.
-
+                Defaults to None.
 
             * nvmes (int, Optional):
                 The number of NVMe drives to be used for storage. A single drive has 6.8 TB available.
-
+                Defaults to None.
 
             * ocpus (float, Optional):
                 The total number of OCPUs available to the instance.
-
+                Defaults to None.
 
         time_maintenance_reboot_due(str, Optional):
             For a VM instance, resets the scheduled time that the instance will be reboot migrated for
@@ -1388,7 +1417,7 @@ async def update(
             [Infrastructure Maintenance](/iaas/Content/Compute/References/infrastructure-maintenance.htm).
 
             Example: `2018-05-25T21:10:29.600Z`
-            . Defaults to None.
+            Defaults to None.
 
         update_operation_constraint(str, Optional):
             The parameter acts as a fail-safe to prevent unwanted downtime when updating a running instance.
@@ -1397,10 +1426,26 @@ async def update(
             * `AVOID_DOWNTIME` - If the instance is in running state, Compute tries to update the instance without rebooting
                               it. If the instance requires a reboot to be updated, an error is returned and the instance
                               is not updated. If the instance is stopped, it is updated and remains in the stopped state.
-            . Defaults to None.
+            Defaults to None.
 
     Returns:
         Dict[str, Any]
+
+    Examples:
+        Using in a state:
+
+        .. code-block:: sls
+
+            resource_is_present:
+              oci.compute.present:
+                - resource_id: value
+                - instance_id: value
+
+        Exec call from the CLI:
+
+        .. code-block:: bash
+
+            idem exec oci.compute.update resource_id=value, instance_id=value
     """
 
     result = dict(comment=[], ret=[], result=True)
@@ -1461,11 +1506,11 @@ async def delete(
     hub,
     ctx,
     resource_id: str,
+    name: str = None,
     if_match: str = None,
     preserve_boot_volume: bool = None,
-    name: str = None,
 ) -> Dict[str, Any]:
-    r"""
+    """
     Permanently terminates (deletes) the specified instance. Any attached VNICs and volumes are automatically detached
     when the instance terminates.
 
@@ -1479,6 +1524,9 @@ async def delete(
     Args:
         resource_id(str):
             The [OCID](/iaas/Content/General/Concepts/identifiers.htm) of the instance.
+
+        name(str, Optional):
+            Idem name of the resource. Defaults to None.
 
         if_match(str, Optional):
             For optimistic concurrency control. In the PUT or DELETE call for a resource, set the `if-match`
@@ -1494,6 +1542,21 @@ async def delete(
     Returns:
         Dict[str, Any]
 
+    Examples:
+        Resource State:
+
+        .. code-block:: sls
+
+            resource_is_absent:
+              oci.compute.absent:
+                - resource_id: value
+                - instance_id: value
+
+        Exec call from the CLI:
+
+        .. code-block:: bash
+
+            idem exec oci.compute.delete resource_id=value, instance_id=value
     """
 
     result = dict(comment=[], ret=[], result=True)

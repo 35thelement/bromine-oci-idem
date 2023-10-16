@@ -1,52 +1,72 @@
 idem_test_compute_is_present:
   oci.compute.present:
+  - opc_retry_token: string
   - agent_config:
-      areAllPluginsDisabled: boolean
-      isManagementDisabled: boolean
-      isMonitoringDisabled: boolean
-      pluginsConfig: null
+      are_all_plugins_disabled: bool
+      is_management_disabled: bool
+      is_monitoring_disabled: bool
+      plugins_config:
+      - desired_state: string
+        name: string
   - availability_config:
-      isLiveMigrationPreferred: null
-      recoveryAction: RESTORE_INSTANCE
-  - availability_domain: value
-  - compartment_id: value
-  - defined_tags:
-      Compute-Tag:
-        RequestedBy: value
-  - display_name: value
-  - fault_domain: FAULT-DOMAIN-3
-  - image_id: value
+      is_live_migration_preferred: bool
+      recovery_action: string
+  - availability_domain: string
+  - capacity_reservation_id: string
+  - compartment_id: string
+  - compute_cluster_id: string
+  - create_vnic_details:
+      assign_ipv6_ip: bool
+      assign_private_dns_record: bool
+      assign_public_ip: bool
+      defined_tags: Dict
+      display_name: string
+      freeform_tags: Dict
+      hostname_label: string
+      ipv6_address_ipv6_subnet_cidr_pair_details:
+      - ipv6_address: string
+        ipv6_subnet_cidr: string
+      nsg_ids:
+      - value
+      private_ip: string
+      skip_source_dest_check: bool
+      subnet_id: string
+      vlan_id: string
+  - dedicated_vm_host_id: string
+  - defined_tags: Dict
+  - display_name: string
+  - extended_metadata: Dict
+  - fault_domain: string
+  - freeform_tags: Dict
+  - hostname_label: string
+  - image_id: string
   - instance_options:
-      areLegacyImdsEndpointsDisabled: boolean
-  - launch_mode: PARAVIRTUALIZED
+      are_legacy_imds_endpoints_disabled: bool
+  - ipxe_script: string
+  - is_pv_encryption_in_transit_enabled: bool
+  - launch_mode: string
   - launch_options:
-      bootVolumeType: PARAVIRTUALIZED
-      firmware: UEFI_64
-      isConsistentVolumeNamingEnabled: false
-      isEncryptionInTransitEnabled: null
-      isPvEncryptionInTransitEnabled: false
-      networkType: PARAVIRTUALIZED
-      remoteDataVolumeType: PARAVIRTUALIZED
-  - lifecycle_state: RUNNING
-  - region: iad
-  - shape: VM.Standard2.1
+      boot_volume_type: string
+      firmware: string
+      is_consistent_volume_naming_enabled: bool
+      is_pv_encryption_in_transit_enabled: bool
+      network_type: string
+      remote_data_volume_type: string
+  - metadata: Dict
+  - platform_config:
+      is_measured_boot_enabled: bool
+      is_secure_boot_enabled: bool
+      is_trusted_platform_module_enabled: bool
+      type_: string
+  - preemptible_instance_config:
+      preemption_action:
+        type_: string
+  - shape: string
   - shape_config:
-      baselineOcpuUtilization: null
-      gpuDescription: null
-      gpus: 0
-      localDiskDescription: null
-      localDisks: 0
-      localDisksTotalSizeInGBs: null
-      maxVnicAttachments: 2
-      memoryInGBs: 15.0
-      networkingBandwidthInGbps: 1.0
-      ocpus: 1.0
-      processorDescription: "2.0 GHz Intel\xAE Xeon\xAE Platinum 8167M (Skylake)"
-      vcpus: 2
+      baseline_ocpu_utilization: string
+      memory_in_g_bs: float
+      nvmes: int
+      ocpus: float
   - source_details:
-      bootVolumeSizeInGBs: null
-      bootVolumeVpusPerGB: null
-      imageId: value
-      instanceSourceImageFilterDetails: null
-      kmsKeyId: null
-      sourceType: image
+      source_type: string
+  - subnet_id: string
